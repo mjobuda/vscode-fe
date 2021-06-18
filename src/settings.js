@@ -8,7 +8,7 @@
 /** imports */
 const vscode = require('vscode');
 
-const LANGUAGE_ID = "vyper";
+const LANGUAGE_ID = "fe";
 
 function extensionConfig() {
     return vscode.workspace.getConfiguration(LANGUAGE_ID);
