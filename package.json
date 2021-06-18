@@ -1,17 +1,17 @@
 {
-    "name": "vscode-vyper",
-    "displayName": "Vyper",
-    "description": "Ethereum Vyper language support for Visual Studio Code",
+    "name": "vscode-fe",
+    "displayName": "Fe",
+    "description": "Ethereum Fe language support for Visual Studio Code",
     "license": "MIT",
-    "version": "0.0.10",
+    "version": "0.0.1",
     "keywords": [
-        "vyper",
+        "Fe",
         "ethereum",
         "blockchain",
         "compiler",
         "security"
     ],
-    "publisher": "tintinweb",
+    "publisher": "mjobuda",
     "icon": "images/icon.png",
     "engines": {
         "vscode": "^1.20.2"
@@ -21,38 +21,34 @@
         "Snippets"
     ],
     "bugs": {
-        "url": "https://github.com/tintinweb/vscode-vyper/issues"
+        "url": "https://github.com/mjobuda/vscode-fe/issues"
     },
     "repository": {
         "type": "git",
         "url": "https://github.com/tintinweb/vscode-vyper"
     },
     "activationEvents": [
-        "onLanguage:vyper",
-        "onCommand:vyper.compileContract"
+        "onLanguage:fe",
+        "onCommand:fe.compileContract"
     ],
     "main": "./src/extension.js",
     "contributes": {
         "languages": [
             {
-                "id": "vyper",
+                "id": "fe",
                 "aliases": [
-                    "Vyper",
-                    "vyper",
-                    "vy"
+                    "Fe",
+                    "fe"
                 ],
                 "extensions": [
-                    ".vy",
-                    ".vy.py",
-                    ".v.py",
-                    ".npmvyper.py"
+                    ".fe"
                 ],
                 "configuration": "./language-configuration.json"
             }
         ],
         "grammars": [
             {
-                "language": "vyper",
+                "language": "fe",
                 "scopeName": "source.vyper",
                 "path": "./syntaxes/vyper.tmLanguage.json"
             }
