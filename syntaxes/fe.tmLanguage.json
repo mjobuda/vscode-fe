@@ -5,8 +5,8 @@
         "Once accepted there, we are happy to receive an update request."
     ],
     "version": "https://github.com/MagicStack/MagicPython/commit/38422d302fe0b3e7716d26ce8cd7d0b9685f3a38",
-    "name": "Vyper",
-    "scopeName": "source.vyper",
+    "name": "Fe",
+    "scopeName": "source.fe",
     "patterns": [
         {
             "include": "#statement"
@@ -15,7 +15,7 @@
             "include": "#expression"
         },
         {
-            "include": "#reserved-names-vyper"
+            "include": "#reserved-names-fe"
         }
     ],
     "repository": {
@@ -1237,11 +1237,11 @@
         "function-def-name": {
             "patterns": [
                 {
-                    "name": "entity.name.function.fallback.vyper",
+                    "name": "entity.name.function.fallback.fe",
                     "match": "(?x)\n  \\b (__default__) \\b\n"
                 },
                 {
-                    "name": "entity.name.function.constructor.vyper",
+                    "name": "entity.name.function.constructor.fe",
                     "match": "(?x)\n  \\b (__init__) \\b\n"
                 },
                 {
@@ -1676,27 +1676,27 @@
                     "match": "(?x)\n  (?<!\\.) \\b(\n    file | reduce | intern | raw_input | unicode | cmp | basestring\n    | execfile | long | xrange\n  )\\b\n"
                 },
                 {
-                    "name": "support.function.builtin.vyper",
+                    "name": "support.function.builtin.fe",
                     "match": "(?x)\n  (?<!\\.) \\b(\n    floor | ceil | as_unitless_number | convert | slice | len | concat | sha3 | sha256 | method_id | keccak256 | ecrecover | ecadd | ecmul | extract32 | as_wei_value | raw_call | RLPList | blockhash | bitwise_and | bitwise_or | bitwise_xor | bitwise_not | uint256_addmod | uint256_mulmod | shift | create_forwarder_to | min | max   )\\b\n"
                 },
                 {
-                    "name": "support.function.builtin.lowlevel.vyper",
+                    "name": "support.function.builtin.lowlevel.fe",
                     "match": "(?x)\n  (?<!\\.) \\b(\n    clear | send | selfdestruct | raw_call | raw_log | create_forwarder_to   )\\b\n"
                 },
                 {
-                    "name": "support.type.event.vyper",
+                    "name": "support.type.event.fe",
                     "match": "(?x)\n  (?<!\\.) \\b(\n    event   )\\b\n"
                 },
                 {
-                    "name": "support.type.reference.vyper",
+                    "name": "support.type.reference.fe",
                     "match": "(?x)\n  (?<!\\.) \\b(\n    map | struct   )\\b\n"
                 },
                 {
-                    "name": "support.function.builtin.modifiers.safe.vyper",
+                    "name": "support.function.builtin.modifiers.safe.fe",
                     "match": "(?x)\n  (?<!\\.) \\b(\n    private | nonrentant | constant | event   )\\b\n"
                 },
                 {
-                    "name": "support.function.builtin.modifiers.unsafe.vyper",
+                    "name": "support.function.builtin.modifiers.unsafe.fe",
                     "match": "(?x)\n  (?<!\\.) \\b(\n    public | payable | modifying   )\\b\n"
                 }
             ]
@@ -1708,23 +1708,23 @@
                     "match": "(?x)\n  (?<!\\.) \\b(\n    bool | bytearray | bytes | classmethod | complex | dict\n    | float | frozenset | int | list | object | property\n    | set | slice | staticmethod | str | tuple | type\n\n    (?# Although 'super' is not a type, it's related to types,\n        and is special enough to be highlighted differently from\n        other built-ins)\n    | super\n  )\\b\n"
                 },
                 {
-                    "name": "support.type.basetype.vyper",
+                    "name": "support.type.basetype.fe",
                     "match": "(?x)\n  (?<!\\.) \\b(\n    wei_value | bytes32 | decimal | bool | bytes | timedelta | uint256 | int128 | address | string | bytearray | timestamp   )\\b\n"
                 },
                 {
-                    "name": "support.type.keywords.vyper",
+                    "name": "support.type.keywords.fe",
                     "match": "(?x)\n  (?<!\\.) \\b(\n    indexed | decimal | uint256 | int128 | contract | address   )\\b\n"
                 },
                 {
-                    "name": "support.type.unit.vyper",
+                    "name": "support.type.unit.fe",
                     "match": "(?x)\n  (?<!\\.) \\b(\n    wei | sec \n\n    (?# Although 'super' is not a type, it's related to types,\n        and is special enough to be highlighted differently from\n        other built-ins)\n    | super\n  )\\b\n"
                 },
                 {
-                    "name": "support.type.constant.vyper",
+                    "name": "support.type.constant.fe",
                     "match": "(?x)\n  (?<!\\.) \\b(\n    ZERO_ADDRESS | EMPTY_BYTES32 | MAX_INT128 | MAX_DECIMAL | MIN_DECIMAL | MAX_UINT256 \n\n    (?# Although 'super' is not a type, it's related to types,\n        and is special enough to be highlighted differently from\n        other built-ins)\n    | super\n  )\\b\n"
                 },
                 {
-                    "name": "entity.other.inherited-class.interface.vyper",
+                    "name": "entity.other.inherited-class.interface.fe",
                     "match": "(?x)\n  (?<!\\.) \\b(\n    implements   )\\b\n"
                 }
             ]
@@ -5346,22 +5346,22 @@
         "special-variables-types": {
             "patterns": [
                 {
-                    "name": "variable.language.special.log.vyper",
+                    "name": "variable.language.special.log.fe",
                     "match": "(?x)\n  (?<!\\.) \\b(\n    log   )\\b\n"
                 },
                 {
-                    "name": "variable.language.special.msg.vyper",
+                    "name": "variable.language.special.msg.fe",
                     "match": "(?x)\n  (?<!\\.) \\b(\n    msg   )\\b\n"
                 },
                 {
-                    "name": "variable.language.special.block.vyper",
+                    "name": "variable.language.special.block.fe",
                     "match": "(?x)\n  (?<!\\.) \\b(\n    block   )\\b\n"
                 }
             ]
         },
-        "reserved-names-vyper": {
-            "name": "name.reserved.vyper",
-            "match": "(?x)\n  \\b (bytes32 | send | continue | bytes | twei | true | shannon | ada | int128 | self | units | this | init | finney | ether | throw | lovelace | kwei | max_decimal | min_decimal | dup | pass | gwei | contract | selfdestruct | raise | address | call | string | push | zero_address | swap | babbage | pwei | false | min_int128 | uint256 | _init_ | clear | def | assert | stop | ___init___ | wei | none | while | szabo | ____init____ | for | empty_bytes32max_int128 | if | until | mwei | max_uint256 | map) \\b\n"
+        "reserved-names-fe": {
+            "name": "name.reserved.fe",
+            "match": "(?x)\n  \\b (as | break | const | continue | contract | def | elif | else | emit | enum | event | false | for | idx | if | in | let | nonpayable | pass | payable | pub | return | revert | self | struct | true | while | address | abstract | async | await | do | external | final | impl | macro | match | mut | override | pure | Self | static | super | trait | type | typeof | use | view | virtual | where | yield) \\b\n"
         }
     }
 }

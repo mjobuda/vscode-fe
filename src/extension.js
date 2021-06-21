@@ -4,7 +4,7 @@
  * @license MIT
  * 
  * language definition based on: https://raw.githubusercontent.com/Microsoft/vscode/master/extensions/python/syntaxes/MagicPython.tmLanguage.json (MIT)
- * compilation related parts taken from: https://github.com/trufflesuite/truffle/tree/develop/packages/truffle-compile-vyper (MIT)
+ * compilation related parts taken from: https://github.com/trufflesuite/truffle/tree/develop/packages/truffle-compile-fe (MIT)
  * */
 
 /** imports */
@@ -13,7 +13,7 @@ const vscode = require("vscode");
 const mod_deco = require("./features/deco.js");
 const mod_signatures = require("./features/signatures.js");
 const mod_hover = require("./features/hover/hover.js");
-const mod_compile = require("./features/compile.js");
+//const mod_compile = require("./features/compile.js");
 const settings = require("./settings");
 /** global vars */
 var activeEditor;
@@ -33,7 +33,8 @@ async function onDidSave(document) {
 
     //always run on save
     if (settings.extensionConfig().compile.onSave) {
-        mod_compile.compileContractCommand(document);
+        //todo!
+        //mod_compile.compileContractCommand(document);
     }
 }
 
@@ -92,7 +93,7 @@ async function onDidChange(event) {
 }
 function onInitModules(context, type) {
     mod_hover.init(context, type);
-    mod_compile.init(context, type);
+    //mod_compile.init(context, type);
 }
 
 function onActivate(context) {
@@ -119,7 +120,7 @@ function onActivate(context) {
         });
 
         context.subscriptions.push(
-            vscode.commands.registerCommand('vyper.compileContract', mod_compile.compileContractCommand)
+            //vscode.commands.registerCommand('fe.compileContract', mod_compile.compileContractCommand)
         );
 
         if (!settings.extensionConfig().mode.active) {
@@ -161,7 +162,7 @@ function onActivate(context) {
         context.subscriptions.push(
             vscode.languages.registerSignatureHelpProvider(
                 { language: type },
-                new mod_signatures.VyperSignatureHelpProvider(),
+                new mod_signatures.feSignatureHelpProvider(),
                 '(', ','
             )
         );

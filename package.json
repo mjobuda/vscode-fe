@@ -25,7 +25,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/tintinweb/vscode-vyper"
+        "url": "https://github.com/mjobuda/vscode-fe"
     },
     "activationEvents": [
         "onLanguage:fe",
@@ -49,56 +49,56 @@
         "grammars": [
             {
                 "language": "fe",
-                "scopeName": "source.vyper",
-                "path": "./syntaxes/vyper.tmLanguage.json"
+                "scopeName": "source.fe",
+                "path": "./syntaxes/fe.tmLanguage.json"
             }
         ],
         "snippets": [
             {
-                "language": "vyper",
-                "path": "./snippets/vyper.json"
+                "language": "fe",
+                "path": "./snippets/fe.json"
             }
         ],
         "configuration": {
             "type": "object",
-            "title": "Vyper (Ethereum)",
+            "title": "Fe (Ethereum)",
             "properties": {
-                "vyper.compile.onSave": {
+                "fe.compile.onSave": {
                     "type": "boolean",
-                    "default": true,
+                    "default": false,
                     "description": "Automatically compile when saving and annotate code with compile results."
                 },
-                "vyper.mode.active": {
+                "fe.mode.active": {
                     "type": "boolean",
                     "default": true,
                     "description": "Enable/Disable all active components of this extension (emergency)."
                 },
-                "vyper.decoration.enable": {
+                "fe.decoration.enable": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Whether to enable/disable vyper active syntax highlighting for security."
+                    "description": "Whether to enable/disable fe active syntax highlighting for security."
                 },
-                "vyper.hover.enable": {
+                "fe.hover.enable": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Whether to enable/disable vyper tooltips/hover information."
+                    "description": "Whether to enable/disable fe tooltips/hover information."
                 },
-                "vyper.command": {
+                "fe.command": {
                     "type": "string",
-                    "default": "vyper",
-                    "description": "Defines how to invoke the vyper compiler command. This can by any shell command and the vyper arguments will be passed to this command as <vyper.command> <args>. Default is to assume vyper is installed in PATH and executable as `vyper`"
+                    "default": "fe",
+                    "description": "Defines how to invoke the fe compiler command. This can by any shell command and the fe arguments will be passed to this command as <fe.command> <args>. Default is to assume fe is installed in PATH and executable as `fe`"
                 },
-                "vyper.analysis.onSave": {
+                "fe.analysis.onSave": {
                     "type": "boolean",
                     "default": true,
                     "markdownDescription": "Automatically submit the compiled bytecode to MythX for security analysis and annotate the code with the security scan results. See https://mythx.io for details"
                 },
-                "vyper.analysis.mythx.password": {
+                "fe.analysis.mythx.password": {
                     "type": "string",
                     "default": "",
                     "markdownDescription": "MythX Password. See https://mythx.io to get password"
                 },
-                "vyper.analysis.mythx.ethAddress": {
+                "fe.analysis.mythx.ethAddress": {
                     "type": "string",
                     "default": "initial",
                     "markdownDescription": "MetaMask ETH address used to login to MythX. Use 'trial' for trial mode. See https://mythx.io"
@@ -107,8 +107,8 @@
         },
         "commands": [
             {
-                "command": "vyper.compileContract",
-                "title": "Vyper: Compile"
+                "command": "fe.compileContract",
+                "title": "fe: Compile"
             }
         ],
         "x-keybindings": [
@@ -118,9 +118,7 @@
             }
         ]
     },
-    "scripts": {
-        "fetchGrammar": "rm -f syntaxes/vyper.tmLanguage.json  && python3 ./scripts/fetch_vyper_language_spec.py > syntaxes/vyper.tmLanguage.json"
-    },
+    "scripts": {},
     "dependencies": {
         "async": "^2.6.3",
         "chai": "^4.2.0",

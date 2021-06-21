@@ -12,10 +12,11 @@ import json
 
 class VyperLang:
     # https://github.com/ethereum/vyper/blob/master/vyper/functions/functions.py
-    builtin_functions = vyper.functions.functions.dispatch_table.keys()
-    builtin_raw_functions = vyper.functions.functions.stmt_dispatch_table.keys()
+    # builtin_functions = vyper.functions.functions.dispatch_table.keys()
+    builtin_functions = vyper.functions.get_builtin_functions()
+    builtin_raw_functions = vyper.functions.STMT_DISPATCH_TABLE.keys()
     # https://github.com/ethereum/vyper/blob/master/vyper/utils.py
-    base_types = set(["wei_value","bytearray","timestamp","timedelta","bytes","string"] + list(vyper.utils.base_types))
+    base_types = set(["wei_value","bytearray","timestamp","timedelta","bytes","string"])# todo: add FE types
     call_keywords = vyper.utils.valid_call_keywords
     units = vyper.utils.valid_units
     global_keywords = vyper.utils.valid_global_keywords

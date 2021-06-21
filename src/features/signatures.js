@@ -5,7 +5,7 @@
  * 
  * */
 
-class VyperSignatureHelpProvider {
+class FeSignatureHelpProvider {
     provideSignatureHelp(document, position, token, context) {
         return new Promise((resolve, reject) => {
             position = position.translate(0, -1);
@@ -22,5 +22,5 @@ class VyperSignatureHelpProvider {
 }
 
 module.exports = {
-    VyperSignatureHelpProvider: VyperSignatureHelpProvider
+    FeSignatureHelpProvider: FeSignatureHelpProvider
 };
