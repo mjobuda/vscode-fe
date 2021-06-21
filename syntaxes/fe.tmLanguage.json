@@ -5361,7 +5361,7 @@
         },
         "reserved-names-fe": {
             "name": "name.reserved.fe",
-            "match": "(?x)\n  \\b (bytes32 | send | continue | bytes | twei | true | shannon | ada | int128 | self | units | this | init | finney | ether | throw | lovelace | kwei | max_decimal | min_decimal | dup | pass | gwei | contract | selfdestruct | raise | address | call | string | push | zero_address | swap | babbage | pwei | false | min_int128 | uint256 | _init_ | clear | def | assert | stop | ___init___ | wei | none | while | szabo | ____init____ | for | empty_bytes32max_int128 | if | until | mwei | max_uint256 | map) \\b\n"
+            "match": "(?x)\n  \\b (as | break | const | continue | contract | def | elif | else | emit | enum | event | false | for | idx | if | in | let | nonpayable | pass | payable | pub | return | revert | self | struct | true | while | address | abstract | async | await | do | external | final | impl | macro | match | mut | override | pure | Self | static | super | trait | type | typeof | use | view | virtual | where | yield) \\b\n"
         }
     }
 }

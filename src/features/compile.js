@@ -22,7 +22,7 @@ var compiler = {
 };
 
 var VYPER_ID = null;
-const VYPER_PATTERN = " **/*.{vy,v.py,vyper.py}";
+const VYPER_PATTERN = " **/*.{fe}";
 
 const compile = {};
 var diagnosticCollections = {
@@ -58,7 +58,7 @@ function checkVyper(source_file, callback) {
         { 'cwd': workspaceForFile(source_file) },
         function (err, stdout, stderr) {
             if (err)
-                return callback(`Error executing vyper:\n${stderr}`);
+                return callback(`Error executing fe:\n${stderr}`);
 
             compiler.version = stdout.trim();
 
@@ -147,7 +147,7 @@ function compileAll(options, callback) {
             }, {});
 
             const compilerInfo = {
-                name: "vyper",
+                name: "fe",
                 version: compiler.version
             };
 
