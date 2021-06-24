@@ -18,5 +18,7 @@ based on
 #### Passive Features
 
 * Fe syntax highlighting support
+* Fe auto compile
 
 #### Active Features
+
