@@ -1,5 +1,13 @@
 # Change Log
 
+### vscode-fe 0.0.2
+- indent
+- autocompile on save (path to Fe compiler can be set on options)
+- removed some mythX stuff
+
+### vscode-fe 0.0.1
+0.0.1 initial release of vscode-fe forked from vscode-vyper
+
 ## 0.0.10
 - fix: an issue where the compilation would fail on windows systems #4
 - update: disabled mythx.io trial code

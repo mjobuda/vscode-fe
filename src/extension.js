@@ -13,7 +13,7 @@ const vscode = require("vscode");
 const mod_deco = require("./features/deco.js");
 const mod_signatures = require("./features/signatures.js");
 const mod_hover = require("./features/hover/hover.js");
-//const mod_compile = require("./features/compile.js");
+const mod_compile = require("./features/compile.js");
 const settings = require("./settings");
 /** global vars */
 var activeEditor;
@@ -26,15 +26,16 @@ var activeEditor;
 
 /** event funcs */
 async function onDidSave(document) {
-    if (document.languageId != settings.LANGUAGE_ID) {
+
+    // if (document.languageId != settings.LANGUAGE_ID) {
+    if (vscode.window.activeTextEditor.document.languageId != settings.LANGUAGE_ID) {
         console.log("langid mismatch");
         return;
     }
 
     //always run on save
-    if (settings.extensionConfig().compile.onSave) {
-        //todo!
-        //mod_compile.compileContractCommand(document);
+    if ((settings.extensionConfig().compile.onSave)&&(document.languageId == settings.LANGUAGE_ID))  {
+        mod_compile.compileContractCommand(document);
     }
 }
 
@@ -93,7 +94,7 @@ async function onDidChange(event) {
 }
 function onInitModules(context, type) {
     mod_hover.init(context, type);
-    //mod_compile.init(context, type);
+    mod_compile.init(context, type);
 }
 
 function onActivate(context) {
@@ -113,14 +114,14 @@ function onActivate(context) {
         vscode.languages.setLanguageConfiguration(type, {
             onEnterRules: [
                 {
-                    beforeText: /^\s*(?:struct|def|class|for|if|elif|else|while|try|with|finally|except|async).*?:\s*$/,
+                    beforeText: /^\s*(?:pub|struct|def|class|for|if|elif|else|while|try|with|finally|except|async).*?:\s*$/,
                     action: { indentAction: vscode.IndentAction.Indent }
                 }
             ]
         });
 
         context.subscriptions.push(
-            //vscode.commands.registerCommand('fe.compileContract', mod_compile.compileContractCommand)
+            vscode.commands.registerCommand('fe.compileContract', mod_compile.compileContractCommand)
         );
 
         if (!settings.extensionConfig().mode.active) {

@@ -21,8 +21,8 @@ var compiler = {
     version: null
 };
 
-var VYPER_ID = null;
-const VYPER_PATTERN = " **/*.{fe}";
+var FE_ID = 'fe';
+const FE_PATTERN = " **/*.{fe}";
 
 const compile = {};
 var diagnosticCollections = {
@@ -82,8 +82,10 @@ function execVyper(source_path, callback) {
         //assume linux/macos.bash.
         escapedTarget = `${shellescape([source_path])}`; //is quoted.
     }
-    const command = `${settings.extensionConfig().command} -f${formats.join(",")} ${escapedTarget}`;
-    //console.log(command);
+    // const command = `${settings.extensionConfig().command} -f${formats.join(",")} ${escapedTarget}`;
+    const command = `${settings.extensionConfig().command}  ${escapedTarget}`;
+    
+    console.log(command);
     exec(command,
         { 'cwd': workspaceForFile(source_path) },
         function (err, stdout, stderr) {
@@ -174,7 +176,7 @@ function compileVyper(options, callback) {
 // append .vy pattern to contracts_directory in options and return updated options
 function updateContractsDirectory(options) {
     return options.with({
-        contracts_directory: path.join(options.contracts_directory, VYPER_PATTERN)
+        contracts_directory: path.join(options.contracts_directory, FE_PATTERN)
     });
 }
 
@@ -196,76 +198,76 @@ function compileActiveFileCommand(contractFile) {
         .then(
             (success) => {
                 diagnosticCollections.compiler.delete(contractFile.uri);
-                diagnosticCollections.mythx.delete(contractFile.uri);
+                // diagnosticCollections.mythx.delete(contractFile.uri);
                 vscode.window.showInformationMessage('[Compiler success] ' + Object.keys(success).join(","));
 
                 // precedence: (1) vyperConfig, otherwise (2) process.env 
-                let password = settings.extensionConfig().analysis.mythx.password || process.env.MYTHX_PASSWORD;
-                let ethAddress = settings.extensionConfig().analysis.mythx.ethAddress || process.env.MYTHX_ETH_ADDRESS;
+                // let password = settings.extensionConfig().analysis.mythx.password || process.env.MYTHX_PASSWORD;
+                // let ethAddress = settings.extensionConfig().analysis.mythx.ethAddress || process.env.MYTHX_ETH_ADDRESS;
 
                 //set to trial?
-                if (ethAddress == "trial") {
-                    ethAddress = ""; // "0x0000000000000000000000000000000000000000" //@note tin: there's no trial :/
-                    password = "trial";
-                }
+                // if (ethAddress == "trial") {
+                //     ethAddress = ""; // "0x0000000000000000000000000000000000000000" //@note tin: there's no trial :/
+                //     password = "trial";
+                // }
 
                 //not set and never asked
-                if (false && ethAddress == "initial") { //@note: no more trial
-                    if (typeof extensionContext.globalState.get("vyper.mythx.account.trial") === "undefined") {
-                        vscode.window.showInformationMessage('[MythX ] Enable MythX security analysis trial mode?', "Free Trial", "Tell me more!", "No, Thanks!")
-                            .then(choice => {
-                                if (choice == "Free Trial") {
-                                    extensionContext.globalState.update("vyper.mythx.account.trial", "useTrial");
-                                    return compileActiveFileCommand(contractFile);
-                                } else if (choice == "Tell me more!") {
-                                    vscode.env.openExternal(vscode.Uri.parse("https://www.mythx.io/#faq"));
-                                } else {
-                                    extensionContext.globalState.update("vyper.mythx.account.trial", "noAsk");
-                                }
-                            });
-                    }
-                    if (extensionContext.globalState.get("vyper.mythx.account.trial") && extensionContext.globalState.get("vyper.mythx.account.trial") == "useTrial") {
-                        ethAddress = "0x0000000000000000000000000000000000000000";
-                        password = "trial";
-                    }
-                }
+                // if (false && ethAddress == "initial") { //@note: no more trial
+                //     if (typeof extensionContext.globalState.get("vyper.mythx.account.trial") === "undefined") {
+                //         vscode.window.showInformationMessage('[MythX ] Enable MythX security analysis trial mode?', "Free Trial", "Tell me more!", "No, Thanks!")
+                //             .then(choice => {
+                //                 if (choice == "Free Trial") {
+                //                     extensionContext.globalState.update("vyper.mythx.account.trial", "useTrial");
+                //                     return compileActiveFileCommand(contractFile);
+                //                 } else if (choice == "Tell me more!") {
+                //                     vscode.env.openExternal(vscode.Uri.parse("https://www.mythx.io/#faq"));
+                //                 } else {
+                //                     extensionContext.globalState.update("vyper.mythx.account.trial", "noAsk");
+                //                 }
+                //             });
+                //     }
+                //     if (extensionContext.globalState.get("vyper.mythx.account.trial") && extensionContext.globalState.get("vyper.mythx.account.trial") == "useTrial") {
+                //         ethAddress = "0x0000000000000000000000000000000000000000";
+                //         password = "trial";
+                //     }
+                // }
 
-                if (settings.extensionConfig().analysis.onSave && ethAddress && password) {
-                    //if mythx is configured
-                    // bytecode
-                    for (let contractKey in success) {
-                        mod_analyze.analyze.mythXjs(ethAddress, password, success[contractKey].bytecode, success[contractKey].deployedBytecode)
-                            .then(result => {
-                                let diagIssues = [];
+                // if (settings.extensionConfig().analysis.onSave && ethAddress && password) {
+                //     //if mythx is configured
+                //     // bytecode
+                //     for (let contractKey in success) {
+                //         mod_analyze.analyze.mythXjs(ethAddress, password, success[contractKey].bytecode, success[contractKey].deployedBytecode)
+                //             .then(result => {
+                //                 let diagIssues = [];
 
-                                result.forEach(function (_result) {
-                                    _result.issues.forEach(function (issue) {
-                                        let shortmsg = `[${issue.severity}] ${issue.swcID}: ${issue.description.head}`;
-                                        let errormsg = `[${issue.severity}] ${issue.swcID}: ${issue.swcTitle}\n${issue.description.head}\n${issue.description.tail}\n\nCovered Instructions/Paths: ${_result.meta.coveredInstructions}/${_result.meta.coveredPaths}`;
-                                        let lineNr = 1;  // we did not submit any source so just pin it to line 0
+                //                 result.forEach(function (_result) {
+                //                     _result.issues.forEach(function (issue) {
+                //                         let shortmsg = `[${issue.severity}] ${issue.swcID}: ${issue.description.head}`;
+                //                         let errormsg = `[${issue.severity}] ${issue.swcID}: ${issue.swcTitle}\n${issue.description.head}\n${issue.description.tail}\n\nCovered Instructions/Paths: ${_result.meta.coveredInstructions}/${_result.meta.coveredPaths}`;
+                //                         let lineNr = 1;  // we did not submit any source so just pin it to line 0
 
-                                        diagIssues.push({
-                                            code: '',
-                                            message: shortmsg,
-                                            range: new vscode.Range(new vscode.Position(lineNr - 1, 0), new vscode.Position(lineNr - 1, 255)),
-                                            severity: mod_analyze.mythXSeverityToVSCodeSeverity[issue.severity],
-                                            source: errormsg,
-                                            relatedInformation: []
-                                        });
-                                    });
-                                });
-                                diagnosticCollections.mythx.set(contractFile.uri, diagIssues);
-                                vscode.window.showInformationMessage(`[MythX success] ${contractKey}: ${diagIssues.length} issues`);
-                            }).catch(err => {
-                                vscode.window.showErrorMessage('[MythX error] ' + err);
-                                console.log(err);
-                            });
-                    }
-                }
+                //                         diagIssues.push({
+                //                             code: '',
+                //                             message: shortmsg,
+                //                             range: new vscode.Range(new vscode.Position(lineNr - 1, 0), new vscode.Position(lineNr - 1, 255)),
+                //                             severity: mod_analyze.mythXSeverityToVSCodeSeverity[issue.severity],
+                //                             source: errormsg,
+                //                             relatedInformation: []
+                //                         });
+                //                     });
+                //                 });
+                //                 diagnosticCollections.mythx.set(contractFile.uri, diagIssues);
+                //                 vscode.window.showInformationMessage(`[MythX success] ${contractKey}: ${diagIssues.length} issues`);
+                //             }).catch(err => {
+                //                 vscode.window.showErrorMessage('[MythX error] ' + err);
+                //                 console.log(err);
+                //             });
+                //     }
+                // }
             },
             (errormsg) => {
                 diagnosticCollections.compiler.delete(contractFile.uri);
-                diagnosticCollections.mythx.delete(contractFile.uri);
+                // diagnosticCollections.mythx.delete(contractFile.uri);
                 vscode.window.showErrorMessage('[Compiler Error] ' + errormsg);
                 let lineNr = 1; // add default errors to line 0 if not known
                 let matches = /(?:line\s+(\d+))/gm.exec(errormsg);
@@ -315,10 +317,10 @@ function compileActiveFileCommand(contractFile) {
 
 function compileActiveFile(contractFile) {
     return new Promise((resolve, reject) => {
-        if (!contractFile || contractFile.languageId !== VYPER_ID) {
-            reject("Not a vyper source file");
-            return;
-        }
+        // if (!contractFile || contractFile.languageId !== FE_ID) {
+        //     reject("Not a Fe source file");
+        //     return;
+        // }
 
         let options = {
             contractsDirectory: "./contracts",
@@ -338,8 +340,8 @@ function compileActiveFile(contractFile) {
 }
 
 function init(context, type) {
-    VYPER_ID = type;
-    diagnosticCollections.compiler = vscode.languages.createDiagnosticCollection('Vyper Compiler');
+    FE_ID = type;
+    diagnosticCollections.compiler = vscode.languages.createDiagnosticCollection('Fe Compiler');
     context.subscriptions.push(diagnosticCollections.compiler);
     diagnosticCollections.mythx = vscode.languages.createDiagnosticCollection('MythX Security Platform');
     context.subscriptions.push(diagnosticCollections.mythx);

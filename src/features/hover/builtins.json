@@ -1,4 +1,9 @@
 {
+    "pub": {
+        "prefix": "pub",
+        "description": "public field modifier",
+        "security":"makes the field public accesible"
+    },
     "wei": {
         "prefix": "wei",
         "description": "1 wei == 10e-XX eth",

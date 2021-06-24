@@ -3,7 +3,7 @@
     "displayName": "Fe",
     "description": "Ethereum Fe language support for Visual Studio Code",
     "license": "MIT",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "keywords": [
         "Fe",
         "ethereum",
@@ -11,8 +11,7 @@
         "compiler",
         "security"
     ],
-    "publisher": "mjobuda",
-    "icon": "images/icon.png",
+    "publisher": "MarekOwsikowski",
     "engines": {
         "vscode": "^1.20.2"
     },
@@ -65,7 +64,7 @@
             "properties": {
                 "fe.compile.onSave": {
                     "type": "boolean",
-                    "default": false,
+                    "default": true,
                     "description": "Automatically compile when saving and annotate code with compile results."
                 },
                 "fe.mode.active": {
@@ -85,23 +84,8 @@
                 },
                 "fe.command": {
                     "type": "string",
-                    "default": "fe",
-                    "description": "Defines how to invoke the fe compiler command. This can by any shell command and the fe arguments will be passed to this command as <fe.command> <args>. Default is to assume fe is installed in PATH and executable as `fe`"
-                },
-                "fe.analysis.onSave": {
-                    "type": "boolean",
-                    "default": true,
-                    "markdownDescription": "Automatically submit the compiled bytecode to MythX for security analysis and annotate the code with the security scan results. See https://mythx.io for details"
-                },
-                "fe.analysis.mythx.password": {
-                    "type": "string",
-                    "default": "",
-                    "markdownDescription": "MythX Password. See https://mythx.io to get password"
-                },
-                "fe.analysis.mythx.ethAddress": {
-                    "type": "string",
-                    "default": "initial",
-                    "markdownDescription": "MetaMask ETH address used to login to MythX. Use 'trial' for trial mode. See https://mythx.io"
+                    "default": "./target/debug/fe --overwrite",
+                    "description": "Defines how to invoke the fe compiler command. This can by any shell command and the fe arguments will be passed to this command as <fe.command> <args>. Default is ./target/debug/fe --overwrite"
                 }
             }
         },
