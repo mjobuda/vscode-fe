@@ -9,15 +9,20 @@
 
 /** imports */
 const vscode = require("vscode");
+var path = require("path");
+const fs = require('fs')
+const execSync = require('child_process').execSync;
+const exec = require('child_process').exec;
 
 const mod_deco = require("./features/deco.js");
 const mod_signatures = require("./features/signatures.js");
 const mod_hover = require("./features/hover/hover.js");
-//const mod_compile = require("./features/compile.js");
+const mod_compile = require("./features/compile.js");
 const settings = require("./settings");
 /** global vars */
 var activeEditor;
 
+var outputFiles = [];
 /** classdecs */
 
 
@@ -26,15 +31,17 @@ var activeEditor;
 
 /** event funcs */
 async function onDidSave(document) {
+
+    // if (document.languageId != settings.LANGUAGE_ID) {
     if (document.languageId != settings.LANGUAGE_ID) {
         console.log("langid mismatch");
         return;
     }
 
     //always run on save
-    if (settings.extensionConfig().compile.onSave) {
-        //todo!
-        //mod_compile.compileContractCommand(document);
+    if ((settings.extensionConfig().compile.onSave) && (document.languageId == settings.LANGUAGE_ID)) {
+        mod_compile.compileContractCommand(document);
+        // freshCompile(document.fileName);
     }
 }
 
@@ -92,12 +99,76 @@ async function onDidChange(event) {
     }
 }
 function onInitModules(context, type) {
+    vscode.window.showInformationMessage('bummX');
     mod_hover.init(context, type);
-    //mod_compile.init(context, type);
+    mod_compile.init(context, type);
+}
+function openFile(filePath) {
+    const openPath = vscode.Uri.file(filePath);
+    vscode.workspace.openTextDocument(openPath).then(doc => {
+        vscode.window.showTextDocument(doc);
+    });
+}
+
+
+
+function getFilesFromDir(
+    dir
+) {
+    var fileList = [];
+    // const isDirectory = fs.statSync(dir).isDirectory();
+
+
+    var files = fs.readdirSync(dir);
+
+    files.forEach((file) => {
+        const filePath = dir + '/' + file;
+        const isDirectory = fs.statSync(filePath).isDirectory();
+        if (isDirectory) {
+            fileList = fileList.concat(getFilesFromDir(filePath));
+        }
+        else {
+            fileList.push(filePath);
+        }
+
+
+    });
+    return fileList;
+}
+
+function freshCompile(fileName)
+{
+    console.log('Cleaning output directory:\n');
+    const rmCommand = "rm -rf "+vscode.workspace.workspaceFolders[0].uri.path+'/'+settings.extensionConfig().outputFolder;
+    // const feCommand = vscode.workspace.workspaceFolders[0].uri.path+'/'+
+    const feCommand =settings.extensionConfig().command
+    +" "
+    +fileName+" "+settings.extensionConfig().options+" "
+    +"--output-dir "+settings.extensionConfig().outputFolder;
+    const rmOutput = execSync(rmCommand).toString();  
+console.log('Output was:\n', rmOutput);
+console.log('Compiling Fe target:\n');
+execSync(feCommand,
+    { 'cwd': vscode.workspace.workspaceFolders[0].uri.path
+    +'/' }, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`error: ${error.message}`);
+      vscode.window.showInformationMessage('Fresh compile unsuccesful');
+      return;
+    }
+  
+    if (stderr) {
+      console.error(`stderr: ${stderr}`);
+      return;
+    }
+  
+    console.log(`stdout:\n${stdout}`);
+    vscode.window.showInformationMessage('Fresh compile succesful');
+  });
 }
 
 function onActivate(context) {
-
+    vscode.window.showInformationMessage('F');
     const active = vscode.window.activeTextEditor;
     activeEditor = active;
 
@@ -108,19 +179,49 @@ function onActivate(context) {
             vscode.languages.reg
         );
 
+
+        let disposable = vscode.commands.registerCommand('fe.openAST', () => {
+            var workPath = vscode.workspace.workspaceFolders[0].uri.path;
+            var currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
+            var currentlyOpenTabfileName = path.basename(currentlyOpenTabfilePath);
+            var filePath = '';
+            if (vscode.window.activeTextEditor.document.languageId == settings.LANGUAGE_ID) {
+                // mod_compile.compileContractCommand(vscode.window.activeTextEditor.document);
+                freshCompile(currentlyOpenTabfilePath);
+
+                outputFiles = [currentlyOpenTabfilePath].concat(getFilesFromDir(workPath + '/' + settings.extensionConfig().outputFolder));
+              
+
+            }
+            if (outputFiles.length != 0) {
+                let ind = outputFiles.indexOf(currentlyOpenTabfilePath);
+                if (ind != -1) {
+                    if (ind < outputFiles.length - 1) {
+                        openFile(outputFiles[ind + 1]);
+                    }
+                    else {
+                        openFile(outputFiles[0]);
+                    }
+                }
+            }
+
+
+        });
+        context.subscriptions.push(disposable);
+
         // taken from: https://github.com/Microsoft/vscode/blob/master/extensions/python/src/pythonMain.ts ; slightly modified
         // autoindent while typing
         vscode.languages.setLanguageConfiguration(type, {
             onEnterRules: [
                 {
-                    beforeText: /^\s*(?:struct|def|class|for|if|elif|else|while|try|with|finally|except|async).*?:\s*$/,
+                    beforeText: /^\s*(?:pub|struct|def|class|for|if|elif|else|while|try|with|finally|except|async).*?:\s*$/,
                     action: { indentAction: vscode.IndentAction.Indent }
                 }
             ]
         });
 
         context.subscriptions.push(
-            //vscode.commands.registerCommand('fe.compileContract', mod_compile.compileContractCommand)
+            vscode.commands.registerCommand('fe.compileContract', mod_compile.compileContractCommand)
         );
 
         if (!settings.extensionConfig().mode.active) {
