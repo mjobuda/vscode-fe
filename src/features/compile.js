@@ -83,7 +83,7 @@ function execVyper(source_path, callback) {
         escapedTarget = `${shellescape([source_path])}`; //is quoted.
     }
     // const command = `${settings.extensionConfig().command} -f${formats.join(",")} ${escapedTarget}`;
-    const command = `${settings.extensionConfig().command}  ${escapedTarget}`;
+    const command = `${settings.extensionConfig().command} ${settings.extensionConfig().options} ${escapedTarget}`;
     
     console.log(command);
     exec(command,

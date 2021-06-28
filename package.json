@@ -3,7 +3,7 @@
     "displayName": "Fe",
     "description": "Ethereum Fe language support for Visual Studio Code",
     "license": "MIT",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "keywords": [
         "Fe",
         "ethereum",
@@ -28,7 +28,8 @@
     },
     "activationEvents": [
         "onLanguage:fe",
-        "onCommand:fe.compileContract"
+        "onCommand:fe.compileContract",
+        "onCommand:openAST"
     ],
     "main": "./src/extension.js",
     "contributes": {
@@ -82,10 +83,21 @@
                     "default": true,
                     "description": "Whether to enable/disable fe tooltips/hover information."
                 },
+                
                 "fe.command": {
                     "type": "string",
-                    "default": "./target/debug/fe --overwrite",
-                    "description": "Defines how to invoke the fe compiler command. This can by any shell command and the fe arguments will be passed to this command as <fe.command> <args>. Default is ./target/debug/fe --overwrite"
+                    "default": "target/debug/fe",
+                    "description": "Defines how to invoke the fe compiler command. This can by any shell command and the fe arguments will be passed to this command as <fe.command> <args>. Default is /target/debug/fe "
+                },
+                "fe.outputFolder": {
+                    "type": "string",
+                    "default": "output",
+                    "description": "Defines the location of the compiled artifacts"
+                },
+                "fe.options": {
+                    "type": "string",
+                    "default": "--overwrite --emit=abi,bytecode,ast,tokens,yul,loweredAst",
+                    "description": "Defines the options of Fe"
                 }
             }
         },
@@ -93,20 +105,37 @@
             {
                 "command": "fe.compileContract",
                 "title": "fe: Compile"
-            }
+            },
+            {
+                "command": "openAST",
+                "title": "Hello World"
+              }
         ],
         "x-keybindings": [
             {
                 "key": "cmd+alt+shift+i",
                 "command": "editor.action.inspectTMScopes"
             }
+        ],
+        "keybindings": [
+            {
+                "command": "openAST",
+                "key": "f4"
+            }
         ]
     },
-    "scripts": {},
+    "scripts": {
+    },
     "dependencies": {
         "async": "^2.6.3",
         "chai": "^4.2.0",
         "mythxjs": "^1.3.1",
         "shell-escape": "^0.2.0"
+    },
+    "devDependencies": {
+        "esbuild": "^0.12.9",
+        "ts-loader": "^9.2.3",
+        "webpack": "^5.40.0",
+        "webpack-cli": "^4.7.2"
     }
 }

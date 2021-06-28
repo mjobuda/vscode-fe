@@ -9,8 +9,8 @@
 Ethereum Fe language support for Visual Studio Code
 
 
-based on 
-[Marketplace](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-vyper): `ext install tintinweb.vscode-vyper`
+
+[Marketplace](https://marketplace.visualstudio.com/items?itemName=MarekOwsikowski.vscode-fe): `ext install MarekOwsikowski.vscode-fe`
 
 
 ## Features

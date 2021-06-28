@@ -9,6 +9,10 @@
 
 /** imports */
 const vscode = require("vscode");
+var path = require("path");
+const fs = require('fs')
+const execSync = require('child_process').execSync;
+const exec = require('child_process').exec;
 
 const mod_deco = require("./features/deco.js");
 const mod_signatures = require("./features/signatures.js");
@@ -18,6 +22,7 @@ const settings = require("./settings");
 /** global vars */
 var activeEditor;
 
+var outputFiles = [];
 /** classdecs */
 
 
@@ -34,8 +39,9 @@ async function onDidSave(document) {
     }
 
     //always run on save
-    if ((settings.extensionConfig().compile.onSave)&&(document.languageId == settings.LANGUAGE_ID))  {
+    if ((settings.extensionConfig().compile.onSave) && (document.languageId == settings.LANGUAGE_ID)) {
         mod_compile.compileContractCommand(document);
+        // freshCompile(document.fileName);
     }
 }
 
@@ -96,6 +102,69 @@ function onInitModules(context, type) {
     mod_hover.init(context, type);
     mod_compile.init(context, type);
 }
+function openFile(filePath) {
+    const openPath = vscode.Uri.file(filePath);
+    vscode.workspace.openTextDocument(openPath).then(doc => {
+        vscode.window.showTextDocument(doc);
+    });
+}
+
+
+
+function getFilesFromDir(
+    dir
+) {
+    var fileList = [];
+    // const isDirectory = fs.statSync(dir).isDirectory();
+
+
+    var files = fs.readdirSync(dir);
+
+    files.forEach((file) => {
+        const filePath = dir + '/' + file;
+        const isDirectory = fs.statSync(filePath).isDirectory();
+        if (isDirectory) {
+            fileList = fileList.concat(getFilesFromDir(filePath));
+        }
+        else {
+            fileList.push(filePath);
+        }
+
+
+    });
+    return fileList;
+}
+
+function freshCompile(fileName)
+{
+    console.log('Cleaning output directory:\n');
+    const rmCommand = "rm -rf "+vscode.workspace.workspaceFolders[0].uri.path+'/'+settings.extensionConfig().outputFolder;
+    // const feCommand = vscode.workspace.workspaceFolders[0].uri.path+'/'+
+    const feCommand =settings.extensionConfig().command
+    +" "
+    +fileName+" "+settings.extensionConfig().options+" "
+    +"--output-dir "+settings.extensionConfig().outputFolder;
+    const rmOutput = execSync(rmCommand).toString();  
+console.log('Output was:\n', rmOutput);
+console.log('Compiling Fe target:\n');
+execSync(feCommand,
+    { 'cwd': vscode.workspace.workspaceFolders[0].uri.path
+    +'/' }, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`error: ${error.message}`);
+      vscode.window.showInformationMessage('Fresh compile unsuccesful');
+      return;
+    }
+  
+    if (stderr) {
+      console.error(`stderr: ${stderr}`);
+      return;
+    }
+  
+    console.log(`stdout:\n${stdout}`);
+    vscode.window.showInformationMessage('Fresh compile succesful');
+  });
+}
 
 function onActivate(context) {
 
@@ -108,6 +177,36 @@ function onActivate(context) {
         context.subscriptions.push(
             vscode.languages.reg
         );
+
+
+        let disposable = vscode.commands.registerCommand('openAST', () => {
+            var workPath = vscode.workspace.workspaceFolders[0].uri.path;
+            var currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
+            var currentlyOpenTabfileName = path.basename(currentlyOpenTabfilePath);
+            var filePath = '';
+            if (vscode.window.activeTextEditor.document.languageId == settings.LANGUAGE_ID) {
+                // mod_compile.compileContractCommand(vscode.window.activeTextEditor.document);
+                freshCompile(currentlyOpenTabfilePath);
+
+                outputFiles = [currentlyOpenTabfilePath].concat(getFilesFromDir(workPath + '/' + settings.extensionConfig().outputFolder));
+              
+
+            }
+            if (outputFiles.length != 0) {
+                let ind = outputFiles.indexOf(currentlyOpenTabfilePath);
+                if (ind != -1) {
+                    if (ind < outputFiles.length - 1) {
+                        openFile(outputFiles[ind + 1]);
+                    }
+                    else {
+                        openFile(outputFiles[0]);
+                    }
+                }
+            }
+
+
+        });
+        context.subscriptions.push(disposable);
 
         // taken from: https://github.com/Microsoft/vscode/blob/master/extensions/python/src/pythonMain.ts ; slightly modified
         // autoindent while typing
