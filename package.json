@@ -3,7 +3,7 @@
     "displayName": "Fe",
     "description": "Ethereum Fe language support for Visual Studio Code",
     "license": "MIT",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "keywords": [
         "Fe",
         "ethereum",
@@ -85,7 +85,7 @@
                 "fe.command": {
                     "type": "string",
                     "default": "target/debug/fe",
-                    "description": "Defines how to invoke the fe compiler command. This can by any shell command and the fe arguments will be passed to this command as <fe.command> <args>. Default is /target/debug/fe "
+                    "description": "Defines how to invoke the fe compiler command. This can by any shell command and the fe arguments will be passed to this command as <fe.command> <file> <fe.options>. Default is /target/debug/fe "
                 },
                 "fe.outputFolder": {
                     "type": "string",
@@ -95,7 +95,7 @@
                 "fe.options": {
                     "type": "string",
                     "default": "--overwrite --emit=abi,bytecode,ast,tokens,yul,loweredAst",
-                    "description": "Defines the options of Fe"
+                    "description": "Defines the options of Fe. Default is: --overwrite --emit=abi,bytecode,ast,tokens,yul,loweredAst"
                 }
             }
         },
