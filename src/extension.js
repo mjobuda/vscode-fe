@@ -99,7 +99,6 @@ async function onDidChange(event) {
     }
 }
 function onInitModules(context, type) {
-    vscode.window.showInformationMessage('bummX');
     mod_hover.init(context, type);
     mod_compile.init(context, type);
 }
@@ -136,8 +135,36 @@ function getFilesFromDir(
     return fileList;
 }
 
+function compileAllinVS(fileName)
+{
+    const fe_options="--overwrite --emit=abi,bytecode,ast,tokens,yul,loweredAst";
+    const outputFolder=".vscode/fe_output";
+const rmCommand = "rm -rf "+outputFolder;
+const feCommand =settings.extensionConfig().command
++" "
+    +fileName+" "+fe_options+" "
+    +"--output-dir "+outputFolder;
+    const rmOutput = execSync(rmCommand).toString();
+    execSync(feCommand,
+        { 'cwd': vscode.workspace.workspaceFolders[0].uri.path
+        +'/' }, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`error: ${error.message}`);
+          return;
+        }
+      
+        if (stderr) {
+          console.error(`stderr: ${stderr}`);
+          return;
+        }
+      
+        console.log(`stdout:\n${stdout}`);
+      });
+}
+
 function freshCompile(fileName)
 {
+    compileAllinVS(fileName);
     console.log('Cleaning output directory:\n');
     const rmCommand = "rm -rf "+vscode.workspace.workspaceFolders[0].uri.path+'/'+settings.extensionConfig().outputFolder;
     // const feCommand = vscode.workspace.workspaceFolders[0].uri.path+'/'+
@@ -168,7 +195,6 @@ execSync(feCommand,
 }
 
 function onActivate(context) {
-    vscode.window.showInformationMessage('F');
     const active = vscode.window.activeTextEditor;
     activeEditor = active;
 
@@ -250,6 +276,8 @@ function onActivate(context) {
         /***** OnSave */
 
         vscode.workspace.onDidSaveTextDocument(document => {
+
+    
             onDidSave(document);
         }, null, context.subscriptions);
 
