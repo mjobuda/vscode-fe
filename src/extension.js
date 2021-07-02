@@ -40,8 +40,8 @@ async function onDidSave(document) {
 
     //always run on save
     if ((settings.extensionConfig().compile.onSave) && (document.languageId == settings.LANGUAGE_ID)) {
-        mod_compile.compileContractCommand(document);
-        // freshCompile(document.fileName);
+        //mod_compile.compileContractCommand(document);
+        freshCompile(document.fileName);
     }
 }
 
@@ -50,7 +50,7 @@ async function onDidChange(event) {
         return;
     }
 
-    if (settings.extensionConfig().decoration.enable) {
+    /* if (settings.extensionConfig().decoration.enable) {
         mod_deco.decorateWords(activeEditor, [
             {
                 regex: "@\\b(public|payable|modifying)\\b",
@@ -96,11 +96,13 @@ async function onDidChange(event) {
                 captureGroup: 0,
             },
         ], mod_deco.styles.boldUnderline);
-    }
+    } */
 }
 function onInitModules(context, type) {
-    mod_hover.init(context, type);
-    mod_compile.init(context, type);
+    //mod_hover.init(context, type);
+    //m
+
+.od_compile.init(context, type);
 }
 function openFile(filePath) {
     const openPath = vscode.Uri.file(filePath);
@@ -215,11 +217,11 @@ function onActivate(context) {
                 // mod_compile.compileContractCommand(vscode.window.activeTextEditor.document);
                 freshCompile(currentlyOpenTabfilePath);
 
-                outputFiles = [currentlyOpenTabfilePath].concat(getFilesFromDir(workPath + '/' + settings.extensionConfig().outputFolder));
+                //outputFiles = [currentlyOpenTabfilePath].concat(getFilesFromDir(workPath + '/' + settings.extensionConfig().outputFolder));
               
 
             }
-            if (outputFiles.length != 0) {
+            /* if (outputFiles.length != 0) {
                 let ind = outputFiles.indexOf(currentlyOpenTabfilePath);
                 if (ind != -1) {
                     if (ind < outputFiles.length - 1) {
@@ -229,7 +231,7 @@ function onActivate(context) {
                         openFile(outputFiles[0]);
                     }
                 }
-            }
+            } */
 
 
         });
