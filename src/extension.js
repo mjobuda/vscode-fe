@@ -100,9 +100,7 @@ async function onDidChange(event) {
 }
 function onInitModules(context, type) {
     //mod_hover.init(context, type);
-    //m
-
-.od_compile.init(context, type);
+    //mod_compile.init(context, type);
 }
 function openFile(filePath) {
     const openPath = vscode.Uri.file(filePath);
