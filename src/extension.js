@@ -139,6 +139,9 @@ function getFilesFromDir(
 function getFeTempOutputFolder() {
     return "/home/mmm/github/vscode-fe/.vscode/fe_output";
 }
+function getFeOutputFolder() {
+    return vscode.workspace.workspaceFolders[0].uri.path+'/'+settings.extensionConfig().outputFolder;
+}
 function getFeCommand() { 
     return "/home/mmm/github/fe/target/debug/fe"; 
 }
@@ -175,7 +178,7 @@ function compileAllinVS(fileName) {
 function freshCompile(fileName) {
     compileAllinVS(fileName);
     const fe_options = settings.extensionConfig().options;
-    const outputFolder = settings.extensionConfig().outputFolder;
+    const outputFolder = getFeOutputFolder();
     const rmCommand = "rm -rf " + outputFolder;
     const feCommand = getFeCommand()
         + " "
