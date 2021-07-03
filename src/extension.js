@@ -19,6 +19,7 @@ const mod_signatures = require("./features/signatures.js");
 const mod_hover = require("./features/hover/hover.js");
 const mod_compile = require("./features/compile.js");
 const settings = require("./settings");
+const tokenProvider = require("./tokenProvider.js");
 /** global vars */
 var activeEditor;
 
@@ -40,8 +41,8 @@ async function onDidSave(document) {
 
     //always run on save
     if ((settings.extensionConfig().compile.onSave) && (document.languageId == settings.LANGUAGE_ID)) {
-        mod_compile.compileContractCommand(document);
-        // freshCompile(document.fileName);
+        // mod_compile.compileContractCommand(document);
+        freshCompile(document.fileName);
     }
 }
 
@@ -100,7 +101,7 @@ async function onDidChange(event) {
 }
 function onInitModules(context, type) {
     mod_hover.init(context, type);
-    mod_compile.init(context, type);
+    // mod_compile.init(context, type);
 }
 function openFile(filePath) {
     const openPath = vscode.Uri.file(filePath);
@@ -134,64 +135,71 @@ function getFilesFromDir(
     });
     return fileList;
 }
-
-function compileAllinVS(fileName)
-{
-    const fe_options="--overwrite --emit=abi,bytecode,ast,tokens,yul,loweredAst";
-    const outputFolder=".vscode/fe_output";
-const rmCommand = "rm -rf "+outputFolder;
-const feCommand =settings.extensionConfig().command
-+" "
-    +fileName+" "+fe_options+" "
-    +"--output-dir "+outputFolder;
+function getOutputFolder()
+{return "/home/mmm/github/vscode-fe/.vscode/fe_output";}
+function getFeCommand()
+{return "/home/mmm/github/fe/target/debug/fe";}
+function compileAllinVS(fileName) {
+    const fe_options = "--overwrite --emit=abi,bytecode,ast,tokens,yul,loweredAst";
+    const outputFolder = getOutputFolder();
+    const rmCommand = "rm -rf " + outputFolder;
+    // const feCommand = settings.extensionConfig().command
+    const feCommand = getFeCommand()
+        + " "
+        + fileName + " " + fe_options + " "
+        + "--output-dir " + outputFolder;
     const rmOutput = execSync(rmCommand).toString();
-    execSync(feCommand,
-        { 'cwd': vscode.workspace.workspaceFolders[0].uri.path
-        +'/' }, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`error: ${error.message}`);
-          return;
-        }
-      
-        if (stderr) {
-          console.error(`stderr: ${stderr}`);
-          return;
-        }
-      
-        console.log(`stdout:\n${stdout}`);
-      });
+    // execSync(feCommand,
+    //     {
+    //         'cwd': vscode.workspace.workspaceFolders[0].uri.path
+    //             + '/'
+    //     }, (error, stdout, stderr) => {
+    //         if (error) {
+    //             console.error(`error: ${error.message}`);
+    //             return;
+    //         }
+
+    //         if (stderr) {
+    //             console.error(`stderr: ${stderr}`);
+    //             return;
+    //         }
+
+    //         console.log(`stdout:\n${stdout}`);
+    //     });
+    execSync(feCommand);
 }
 
-function freshCompile(fileName)
-{
+function freshCompile(fileName) {
     compileAllinVS(fileName);
-    console.log('Cleaning output directory:\n');
-    const rmCommand = "rm -rf "+vscode.workspace.workspaceFolders[0].uri.path+'/'+settings.extensionConfig().outputFolder;
-    // const feCommand = vscode.workspace.workspaceFolders[0].uri.path+'/'+
-    const feCommand =settings.extensionConfig().command
-    +" "
-    +fileName+" "+settings.extensionConfig().options+" "
-    +"--output-dir "+settings.extensionConfig().outputFolder;
-    const rmOutput = execSync(rmCommand).toString();  
-console.log('Output was:\n', rmOutput);
-console.log('Compiling Fe target:\n');
-execSync(feCommand,
-    { 'cwd': vscode.workspace.workspaceFolders[0].uri.path
-    +'/' }, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`error: ${error.message}`);
-      vscode.window.showInformationMessage('Fresh compile unsuccesful');
-      return;
-    }
-  
-    if (stderr) {
-      console.error(`stderr: ${stderr}`);
-      return;
-    }
-  
-    console.log(`stdout:\n${stdout}`);
-    vscode.window.showInformationMessage('Fresh compile succesful');
-  });
+    // console.log('Cleaning output directory:\n');
+    // const rmCommand = "rm -rf " + vscode.workspace.workspaceFolders[0].uri.path + '/' + settings.extensionConfig().outputFolder;
+    // // const feCommand = vscode.workspace.workspaceFolders[0].uri.path+'/'+
+    // const feCommand = settings.extensionConfig().command
+    //     + " "
+    //     + fileName + " " + settings.extensionConfig().options + " "
+    //     + "--output-dir " + settings.extensionConfig().outputFolder;
+    // const rmOutput = execSync(rmCommand).toString();
+    // console.log('Output was:\n', rmOutput);
+    // console.log('Compiling Fe target:\n');
+    // execSync(feCommand,
+    //     {
+    //         'cwd': vscode.workspace.workspaceFolders[0].uri.path
+    //             + '/'
+    //     }, (error, stdout, stderr) => {
+    //         if (error) {
+    //             console.error(`error: ${error.message}`);
+    //             vscode.window.showInformationMessage('Fresh compile unsuccesful');
+    //             return;
+    //         }
+
+    //         if (stderr) {
+    //             console.error(`stderr: ${stderr}`);
+    //             return;
+    //         }
+
+    //         console.log(`stdout:\n${stdout}`);
+    //         vscode.window.showInformationMessage('Fresh compile succesful');
+    //     });
 }
 
 function onActivate(context) {
@@ -204,7 +212,8 @@ function onActivate(context) {
         context.subscriptions.push(
             vscode.languages.reg
         );
-
+        console.log('activate');
+        tokenProvider.activate(context);
 
         let disposable = vscode.commands.registerCommand('fe.openAST', () => {
             var workPath = vscode.workspace.workspaceFolders[0].uri.path;
@@ -215,21 +224,21 @@ function onActivate(context) {
                 // mod_compile.compileContractCommand(vscode.window.activeTextEditor.document);
                 freshCompile(currentlyOpenTabfilePath);
 
-                outputFiles = [currentlyOpenTabfilePath].concat(getFilesFromDir(workPath + '/' + settings.extensionConfig().outputFolder));
-              
+                // outputFiles = [currentlyOpenTabfilePath].concat(getFilesFromDir(workPath + '/' + settings.extensionConfig().outputFolder));
+
 
             }
-            if (outputFiles.length != 0) {
-                let ind = outputFiles.indexOf(currentlyOpenTabfilePath);
-                if (ind != -1) {
-                    if (ind < outputFiles.length - 1) {
-                        openFile(outputFiles[ind + 1]);
-                    }
-                    else {
-                        openFile(outputFiles[0]);
-                    }
-                }
-            }
+            // if (outputFiles.length != 0) {
+            //     let ind = outputFiles.indexOf(currentlyOpenTabfilePath);
+            //     if (ind != -1) {
+            //         if (ind < outputFiles.length - 1) {
+            //             openFile(outputFiles[ind + 1]);
+            //         }
+            //         else {
+            //             openFile(outputFiles[0]);
+            //         }
+            //     }
+            // }
 
 
         });
@@ -246,9 +255,10 @@ function onActivate(context) {
             ]
         });
 
-        context.subscriptions.push(
-            vscode.commands.registerCommand('fe.compileContract', mod_compile.compileContractCommand)
-        );
+        // context.subscriptions.push(
+        //     vscode.commands.registerCommand('fe.compileContract', mod_compile.compileContractCommand)
+        // );
+        
 
         if (!settings.extensionConfig().mode.active) {
             console.log("ⓘ activate extension: entering passive mode. not registering any active code augmentation support.");
@@ -277,7 +287,7 @@ function onActivate(context) {
 
         vscode.workspace.onDidSaveTextDocument(document => {
 
-    
+
             onDidSave(document);
         }, null, context.subscriptions);
 
