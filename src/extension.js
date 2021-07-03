@@ -141,35 +141,18 @@ function getFeOutputFolder() {
     return vscode.workspace.workspaceFolders[0].uri.path+'/'+settings.extensionConfig().outputFolder;
 }
 function getFeCommand() { 
-    return "/home/mmm/github/fe/target/debug/fe"; 
+    return settings.extensionConfig().command;
 }
 function compileAllinVS(fileName) {
     const fe_options = "--overwrite --emit=abi,bytecode,ast,tokens,yul,loweredAst";
     const outputFolder = tp.getFeTempOutputFolder();
     const rmCommand = "rm -rf " + outputFolder;
-    // const feCommand = settings.extensionConfig().command
     const feCommand = getFeCommand()
         + " "
         + fileName + " " + fe_options + " "
         + "--output-dir " + outputFolder;
     const rmOutput = execSync(rmCommand).toString();
-    // execSync(feCommand,
-    //     {
-    //         'cwd': vscode.workspace.workspaceFolders[0].uri.path
-    //             + '/'
-    //     }, (error, stdout, stderr) => {
-    //         if (error) {
-    //             console.error(`error: ${error.message}`);
-    //             return;
-    //         }
-
-    //         if (stderr) {
-    //             console.error(`stderr: ${stderr}`);
-    //             return;
-    //         }
-
-    //         console.log(`stdout:\n${stdout}`);
-    //     });
+    
     execSync(feCommand);
 }
 

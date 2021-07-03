@@ -31,6 +31,12 @@
     ],
     "main": "./src/extension.js",
     "contributes": {
+        "themes": [
+            {
+                "label": "FyTheme",
+                "path": "./themes/fetheme.json"
+            }
+        ],
         "languages": [
             {
                 "id": "fe",
