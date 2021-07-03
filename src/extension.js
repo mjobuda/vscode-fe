@@ -19,7 +19,7 @@ const mod_signatures = require("./features/signatures.js");
 const mod_hover = require("./features/hover/hover.js");
 const mod_compile = require("./features/compile.js");
 const settings = require("./settings");
-const tokenProvider = require("./tokenProvider.js");
+const tp = require("./tokenProvider.js");
 /** global vars */
 var activeEditor;
 
@@ -136,9 +136,7 @@ function getFilesFromDir(
     });
     return fileList;
 }
-function getFeTempOutputFolder() {
-    return "/home/mmm/github/vscode-fe/.vscode/fe_output";
-}
+
 function getFeOutputFolder() {
     return vscode.workspace.workspaceFolders[0].uri.path+'/'+settings.extensionConfig().outputFolder;
 }
@@ -147,7 +145,7 @@ function getFeCommand() {
 }
 function compileAllinVS(fileName) {
     const fe_options = "--overwrite --emit=abi,bytecode,ast,tokens,yul,loweredAst";
-    const outputFolder = getFeTempOutputFolder();
+    const outputFolder = tp.getFeTempOutputFolder();
     const rmCommand = "rm -rf " + outputFolder;
     // const feCommand = settings.extensionConfig().command
     const feCommand = getFeCommand()
@@ -217,7 +215,7 @@ function onActivate(context) {
     context.subscriptions.push(disposable);
 
     registerDocType(settings.LANGUAGE_ID);
-    tokenProvider.activate(context);
+    tp.activate(context);
 
     function registerDocType(type) {
         context.subscriptions.push(
