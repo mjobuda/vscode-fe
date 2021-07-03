@@ -27,18 +27,11 @@
         "url": "https://github.com/mjobuda/vscode-fe"
     },
     "activationEvents": [
-        "onLanguage:fe",
-        "onCommand:fe.compileContract"
+        "onLanguage:fe"
     ],
     "main": "./src/extension.js",
     "contributes": {
         "languages": [
-            {
-				"id": "semanticLanguage",
-				"extensions": [
-					".semanticLanguage"
-				]
-			},
             {
                 "id": "fe",
                 "aliases": [
@@ -86,6 +79,11 @@
             }
         ],
         "grammars": [
+            {
+                "language": "fe",
+                "scopeName": "source.fe",
+                "path": "./syntaxes/fe.tmLanguage.json"
+            },
             {
                 "language": "ast",
                 "scopeName": "source.fe",

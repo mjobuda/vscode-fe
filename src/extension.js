@@ -36,6 +36,7 @@ async function onDidSave(document) {
     // if (document.languageId != settings.LANGUAGE_ID) {
     if (document.languageId != settings.LANGUAGE_ID) {
         console.log("langid mismatch");
+        // document.languageId = settings.LANGUAGE_ID;
         return;
     }
 
@@ -51,56 +52,56 @@ async function onDidChange(event) {
         return;
     }
 
-    if (settings.extensionConfig().decoration.enable) {
-        mod_deco.decorateWords(activeEditor, [
-            {
-                regex: "@\\b(public|payable|modifying)\\b",
-                captureGroup: 0,
-            },
-            {
-                regex: "\\b(send|raw_call|selfdestruct|raw_log|create_forwarder_to|blockhash)\\b",
-                captureGroup: 0,
-                hoverMessage: "❗**potentially unsafe** lowlevel call"
-            },
-        ], mod_deco.styles.foreGroundWarning);
-        mod_deco.decorateWords(activeEditor, [
-            {
-                regex: "\\b(public|payable|modifying)\\b\\(",
-                captureGroup: 1,
-            },
-        ], mod_deco.styles.foreGroundWarningUnderline);
-        mod_deco.decorateWords(activeEditor, [
-            {
-                regex: "\\b(\\.balance|msg\\.[\\w]+|block\\.[\\w]+)\\b",
-                captureGroup: 0,
-            }
-        ], mod_deco.styles.foreGroundInfoUnderline);
-        mod_deco.decorateWords(activeEditor, [
-            {
-                regex: "@?\\b(private|nonrentant|constant)\\b",
-                captureGroup: 0,
-            },
-        ], mod_deco.styles.foreGroundOk);
-        mod_deco.decorateWords(activeEditor, [
-            {
-                regex: "\\b(log)\\.",
-                captureGroup: 1,
-            },
-            {
-                regex: "\\b(clear)\\b\\(",
-                captureGroup: 1,
-            },
-        ], mod_deco.styles.foreGroundNewEmit);
-        mod_deco.decorateWords(activeEditor, [
-            {
-                regex: "\\b(__init__|__default__)\\b",
-                captureGroup: 0,
-            },
-        ], mod_deco.styles.boldUnderline);
-    }
+    // if (settings.extensionConfig().decoration.enable) {
+    //     mod_deco.decorateWords(activeEditor, [
+    //         {
+    //             regex: "@\\b(public|payable|modifying)\\b",
+    //             captureGroup: 0,
+    //         },
+    //         {
+    //             regex: "\\b(send|raw_call|selfdestruct|raw_log|create_forwarder_to|blockhash)\\b",
+    //             captureGroup: 0,
+    //             hoverMessage: "❗**potentially unsafe** lowlevel call"
+    //         },
+    //     ], mod_deco.styles.foreGroundWarning);
+    //     mod_deco.decorateWords(activeEditor, [
+    //         {
+    //             regex: "\\b(public|payable|modifying)\\b\\(",
+    //             captureGroup: 1,
+    //         },
+    //     ], mod_deco.styles.foreGroundWarningUnderline);
+    //     mod_deco.decorateWords(activeEditor, [
+    //         {
+    //             regex: "\\b(\\.balance|msg\\.[\\w]+|block\\.[\\w]+)\\b",
+    //             captureGroup: 0,
+    //         }
+    //     ], mod_deco.styles.foreGroundInfoUnderline);
+    //     mod_deco.decorateWords(activeEditor, [
+    //         {
+    //             regex: "@?\\b(private|nonrentant|constant)\\b",
+    //             captureGroup: 0,
+    //         },
+    //     ], mod_deco.styles.foreGroundOk);
+    //     mod_deco.decorateWords(activeEditor, [
+    //         {
+    //             regex: "\\b(log)\\.",
+    //             captureGroup: 1,
+    //         },
+    //         {
+    //             regex: "\\b(clear)\\b\\(",
+    //             captureGroup: 1,
+    //         },
+    //     ], mod_deco.styles.foreGroundNewEmit);
+    //     mod_deco.decorateWords(activeEditor, [
+    //         {
+    //             regex: "\\b(__init__|__default__)\\b",
+    //             captureGroup: 0,
+    //         },
+    //     ], mod_deco.styles.boldUnderline);
+    // }
 }
 function onInitModules(context, type) {
-    mod_hover.init(context, type);
+    // mod_hover.init(context, type);
     // mod_compile.init(context, type);
 }
 function openFile(filePath) {
@@ -135,13 +136,15 @@ function getFilesFromDir(
     });
     return fileList;
 }
-function getOutputFolder()
-{return "/home/mmm/github/vscode-fe/.vscode/fe_output";}
-function getFeCommand()
-{return "/home/mmm/github/fe/target/debug/fe";}
+function getFeTempOutputFolder() {
+    return "/home/mmm/github/vscode-fe/.vscode/fe_output";
+}
+function getFeCommand() { 
+    return "/home/mmm/github/fe/target/debug/fe"; 
+}
 function compileAllinVS(fileName) {
     const fe_options = "--overwrite --emit=abi,bytecode,ast,tokens,yul,loweredAst";
-    const outputFolder = getOutputFolder();
+    const outputFolder = getFeTempOutputFolder();
     const rmCommand = "rm -rf " + outputFolder;
     // const feCommand = settings.extensionConfig().command
     const feCommand = getFeCommand()
@@ -171,78 +174,56 @@ function compileAllinVS(fileName) {
 
 function freshCompile(fileName) {
     compileAllinVS(fileName);
-    // console.log('Cleaning output directory:\n');
-    // const rmCommand = "rm -rf " + vscode.workspace.workspaceFolders[0].uri.path + '/' + settings.extensionConfig().outputFolder;
-    // // const feCommand = vscode.workspace.workspaceFolders[0].uri.path+'/'+
-    // const feCommand = settings.extensionConfig().command
-    //     + " "
-    //     + fileName + " " + settings.extensionConfig().options + " "
-    //     + "--output-dir " + settings.extensionConfig().outputFolder;
-    // const rmOutput = execSync(rmCommand).toString();
-    // console.log('Output was:\n', rmOutput);
-    // console.log('Compiling Fe target:\n');
-    // execSync(feCommand,
-    //     {
-    //         'cwd': vscode.workspace.workspaceFolders[0].uri.path
-    //             + '/'
-    //     }, (error, stdout, stderr) => {
-    //         if (error) {
-    //             console.error(`error: ${error.message}`);
-    //             vscode.window.showInformationMessage('Fresh compile unsuccesful');
-    //             return;
-    //         }
+    const fe_options = settings.extensionConfig().options;
+    const outputFolder = settings.extensionConfig().outputFolder;
+    const rmCommand = "rm -rf " + outputFolder;
+    const feCommand = getFeCommand()
+        + " "
+        + fileName + " " + fe_options + " "
+        + "--output-dir " + outputFolder;
+    execSync(rmCommand);
+    execSync(feCommand);
+    outputFiles = [fileName].concat(getFilesFromDir(outputFolder));
 
-    //         if (stderr) {
-    //             console.error(`stderr: ${stderr}`);
-    //             return;
-    //         }
-
-    //         console.log(`stdout:\n${stdout}`);
-    //         vscode.window.showInformationMessage('Fresh compile succesful');
-    //     });
 }
 
 function onActivate(context) {
+
     const active = vscode.window.activeTextEditor;
     activeEditor = active;
+    let disposable = vscode.commands.registerCommand('fe.openAST', () => {
+        var workPath = vscode.workspace.workspaceFolders[0].uri.path;
+        var currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
+        var currentlyOpenTabfileName = path.basename(currentlyOpenTabfilePath);
+        var filePath = '';
+
+        if (outputFiles.length != 0) {
+            let ind = outputFiles.indexOf(currentlyOpenTabfilePath);
+            if (ind != -1) {
+                if (ind < outputFiles.length - 1) {
+                    openFile(outputFiles[ind + 1]);
+                }
+                else {
+                    openFile(outputFiles[0]);
+                }
+            }
+        }
+
+
+    });
+    context.subscriptions.push(disposable);
 
     registerDocType(settings.LANGUAGE_ID);
+    tokenProvider.activate(context);
 
     function registerDocType(type) {
         context.subscriptions.push(
             vscode.languages.reg
         );
         console.log('activate');
-        tokenProvider.activate(context);
-
-        let disposable = vscode.commands.registerCommand('fe.openAST', () => {
-            var workPath = vscode.workspace.workspaceFolders[0].uri.path;
-            var currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
-            var currentlyOpenTabfileName = path.basename(currentlyOpenTabfilePath);
-            var filePath = '';
-            if (vscode.window.activeTextEditor.document.languageId == settings.LANGUAGE_ID) {
-                // mod_compile.compileContractCommand(vscode.window.activeTextEditor.document);
-                freshCompile(currentlyOpenTabfilePath);
-
-                // outputFiles = [currentlyOpenTabfilePath].concat(getFilesFromDir(workPath + '/' + settings.extensionConfig().outputFolder));
 
 
-            }
-            // if (outputFiles.length != 0) {
-            //     let ind = outputFiles.indexOf(currentlyOpenTabfilePath);
-            //     if (ind != -1) {
-            //         if (ind < outputFiles.length - 1) {
-            //             openFile(outputFiles[ind + 1]);
-            //         }
-            //         else {
-            //             openFile(outputFiles[0]);
-            //         }
-            //     }
-            // }
 
-
-        });
-        context.subscriptions.push(disposable);
 
         // taken from: https://github.com/Microsoft/vscode/blob/master/extensions/python/src/pythonMain.ts ; slightly modified
         // autoindent while typing
@@ -258,7 +239,7 @@ function onActivate(context) {
         // context.subscriptions.push(
         //     vscode.commands.registerCommand('fe.compileContract', mod_compile.compileContractCommand)
         // );
-        
+
 
         if (!settings.extensionConfig().mode.active) {
             console.log("ⓘ activate extension: entering passive mode. not registering any active code augmentation support.");
