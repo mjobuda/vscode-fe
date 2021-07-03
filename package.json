@@ -3,7 +3,7 @@
     "displayName": "Fe",
     "description": "Ethereum Fe language support for Visual Studio Code",
     "license": "MIT",
-    "version": "0.0.10",
+    "version": "0.0.11",
     "keywords": [
         "Fe",
         "ethereum",
@@ -29,11 +29,12 @@
     "activationEvents": [
         "onLanguage:fe"
     ],
-    "main": "./src/extension.js",
+    "main": "./dist/extension.js",
     "contributes": {
         "themes": [
             {
-                "label": "FyTheme",
+                "label": "FeThemeDark",
+                "uiTheme": "vs-dark",
                 "path": "./themes/fetheme.json"
             }
         ],
@@ -153,29 +154,30 @@
                 }
             }
         },
-        
         "configurationDefaults": {
             "[fe]": {
-              "editor.semanticHighlighting.enabled": true
+                "editor.semanticHighlighting.enabled": true
             }
-          },
-          "tokenColors": [
+        },
+        "tokenColors": [
             {
-              "scope": "Def",
-              "settings": {
-                "foreground": "#dd0000",
-                "fontStyle": "italic"
-              }
+                "scope": "Def",
+                "settings": {
+                    "foreground": "#dd0000",
+                    "fontStyle": "italic"
+                }
             }
-          ],
-          "semanticTokenScopes": [
+        ],
+        "semanticTokenScopes": [
             {
-              "language": "fe",
-              "scopes": {
-                "Name":["variable.other.constant.property.ts"]
-              }
+                "language": "fe",
+                "scopes": {
+                    "Name": [
+                        "variable.other.constant.property.ts"
+                    ]
+                }
             }
-          ],
+        ],
         "commands": [
             {
                 "command": "fe.compileContract",
@@ -200,10 +202,10 @@
         ]
     },
     "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc ./",
-		"lint": "eslint . --ext .ts,.tsx",
-		"watch": "tsc -watch -p ./"
+        "vscode:prepublish": "webpack --mode production",
+    "webpack": "webpack --mode development",
+    "webpack-dev": "webpack --mode development --watch",
+    "test-compile": "tsc -p ./"
     },
     "dependencies": {
         "async": "^2.6.3",
@@ -216,5 +218,11 @@
         "@typescript-eslint/parser": "^4.16.0",
         "eslint": "^7.21.0",
         "typescript": "^4.3.2"
+    },
+    "devDependencies": {
+        "esbuild": "^0.12.14",
+        "ts-loader": "^9.2.3",
+        "webpack": "^5.42.0",
+        "webpack-cli": "^4.7.2"
     }
 }

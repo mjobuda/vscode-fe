@@ -184,6 +184,7 @@ function getTokenDataLine(text, documentText) {
     return ret;
 }
 function getTokenDataStartCharacter(text, documentText) {
+    //nasty way to extract the data!!! you should change this
     var start = Number(text.split('\n').slice(1, -2)[3].replace(/\s+/g, '').split(":")[1].replace(",", ""));
     if (start == 0)
         return 0;
@@ -193,6 +194,7 @@ function getTokenDataStartCharacter(text, documentText) {
     return ret[ret.length - 1].length + 1;
 }
 function getTokenDataLength(text) {
+    //nasty way to extract the data!!! you should change this
     var start = Number(text.split('\n').slice(1, -2)[3].replace(/\s+/g, '').split(":")[1].replace(",", ""));
     var end = Number(text.split('\n').slice(1, -2)[4].replace(/\s+/g, '').split(":")[1].replace(",", ""));
     return end - start;

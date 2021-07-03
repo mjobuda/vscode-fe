@@ -14,10 +14,10 @@ const fs = require('fs')
 const execSync = require('child_process').execSync;
 const exec = require('child_process').exec;
 
-const mod_deco = require("./features/deco.js");
-const mod_signatures = require("./features/signatures.js");
-const mod_hover = require("./features/hover/hover.js");
-const mod_compile = require("./features/compile.js");
+// const mod_deco = require("./features/deco.js");
+// const mod_signatures = require("./features/signatures.js");
+// const mod_hover = require("./features/hover/hover.js");
+// const mod_compile = require("./features/compile.js");
 const settings = require("./settings");
 const tp = require("./tokenProvider.js");
 /** global vars */
