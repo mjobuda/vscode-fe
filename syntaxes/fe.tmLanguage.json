@@ -8,15 +8,6 @@
     "name": "Fe",
     "scopeName": "source.fe",
     "patterns": [
-        {
-            "include": "#statement"
-        },
-        {
-            "include": "#expression"
-        },
-        {
-            "include": "#reserved-names-fe"
-        }
     ],
     "repository": {
         "impossible": {

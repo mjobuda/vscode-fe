@@ -215,7 +215,7 @@ function onActivate(context) {
     context.subscriptions.push(disposable);
 
     registerDocType(settings.LANGUAGE_ID);
-    tp.activate(context);
+    
 
     function registerDocType(type) {
         context.subscriptions.push(
@@ -272,6 +272,8 @@ function onActivate(context) {
 
             onDidSave(document);
         }, null, context.subscriptions);
+
+    tp.activate(context);
 
         /****** OnOpen */
         vscode.workspace.onDidOpenTextDocument(document => {

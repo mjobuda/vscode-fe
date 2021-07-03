@@ -147,6 +147,15 @@
                 }
             }
         },
+        
+        "configurationDefaults": {
+            "[fe]": {
+              "editor.semanticHighlighting.enabled": true,
+              "semanticTokenColors": {
+                "variable.readonly:java": "#ff0011"
+              }
+            }
+          },
         "commands": [
             {
                 "command": "fe.compileContract",
