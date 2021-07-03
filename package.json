@@ -150,12 +150,26 @@
         
         "configurationDefaults": {
             "[fe]": {
-              "editor.semanticHighlighting.enabled": true,
-              "semanticTokenColors": {
-                "variable.readonly:java": "#ff0011"
-              }
+              "editor.semanticHighlighting.enabled": true
             }
           },
+          "tokenColors": [
+            {
+              "scope": "Def",
+              "settings": {
+                "foreground": "#dd0000",
+                "fontStyle": "italic"
+              }
+            }
+          ],
+          "semanticTokenScopes": [
+            {
+              "language": "fe",
+              "scopes": {
+                "Name":["variable.other.constant.property.ts"]
+              }
+            }
+          ],
         "commands": [
             {
                 "command": "fe.compileContract",
