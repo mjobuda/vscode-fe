@@ -3,7 +3,7 @@
     "displayName": "Fe",
     "description": "Ethereum Fe language support for Visual Studio Code",
     "license": "MIT",
-    "version": "0.0.11",
+    "version": "0.0.12",
     "keywords": [
         "Fe",
         "ethereum",
@@ -29,7 +29,7 @@
     "activationEvents": [
         "onLanguage:fe"
     ],
-    "main": "./src/extension.js",
+    "main": "./dist/extension.js",
     "contributes": {
         "themes": [
             {

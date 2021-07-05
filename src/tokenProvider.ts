@@ -148,6 +148,7 @@ function getTokensFromTokenFile() {
 	} catch (err) {
 		console.error(err)
 	}
+
 	const ret = lines.split('Token').slice(1, -1);
 	return ret;
 }
@@ -180,15 +181,10 @@ function getTokenDataTokenModifiers(text) {
 }
 class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensProvider {
 	async provideDocumentSemanticTokens(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.SemanticTokens> {
-		const moduleTokens = getTokensFromTokenFile();
-		// const allTokens = this._parseText(document.getText());
-		const builder = new vscode.SemanticTokensBuilder();
+
+		var moduleTokens = getTokensFromTokenFile();
+		var builder = new vscode.SemanticTokensBuilder();
 		moduleTokens.forEach((token) => {
-			var tt = [getTokenDataLine(token, document.getText()),
-				getTokenDataStartCharacter(token, document.getText()),
-				getTokenDataLength(token),
-				this._encodeTokenType(getTokenDataTokenType(token)),
-				this._encodeTokenModifiers(getTokenDataTokenModifiers(token))]
 			builder.push(
 				getTokenDataLine(token, document.getText()),
 				getTokenDataStartCharacter(token, document.getText()),

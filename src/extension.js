@@ -32,76 +32,19 @@ var outputFiles = [];
 
 /** event funcs */
 async function onDidSave(document) {
+    
+    // vscode.window.showErrorMessage(document.fileName);
+    if (document.fileName.endsWith('.git')){
+        freshCompile(document.fileName.slice(0, -4));}
+    else{
+        freshCompile(document.fileName);}
 
-    if (document.languageId != settings.LANGUAGE_ID) {
-        console.log("langid mismatch");
-        // document.languageId = settings.LANGUAGE_ID;
-        return;
-    }
-
-    //always run on save
-    if ((settings.extensionConfig().compile.onSave) && (document.languageId == settings.LANGUAGE_ID)) {
-        // mod_compile.compileContractCommand(document);
-        freshCompile(document.fileName);
-    }
 }
 
 async function onDidChange(event) {
     if (vscode.window.activeTextEditor.document.languageId != settings.LANGUAGE_ID) {
         return;
     }
-
-    // if (settings.extensionConfig().decoration.enable) {
-    //     mod_deco.decorateWords(activeEditor, [
-    //         {
-    //             regex: "@\\b(public|payable|modifying)\\b",
-    //             captureGroup: 0,
-    //         },
-    //         {
-    //             regex: "\\b(send|raw_call|selfdestruct|raw_log|create_forwarder_to|blockhash)\\b",
-    //             captureGroup: 0,
-    //             hoverMessage: "❗**potentially unsafe** lowlevel call"
-    //         },
-    //     ], mod_deco.styles.foreGroundWarning);
-    //     mod_deco.decorateWords(activeEditor, [
-    //         {
-    //             regex: "\\b(public|payable|modifying)\\b\\(",
-    //             captureGroup: 1,
-    //         },
-    //     ], mod_deco.styles.foreGroundWarningUnderline);
-    //     mod_deco.decorateWords(activeEditor, [
-    //         {
-    //             regex: "\\b(\\.balance|msg\\.[\\w]+|block\\.[\\w]+)\\b",
-    //             captureGroup: 0,
-    //         }
-    //     ], mod_deco.styles.foreGroundInfoUnderline);
-    //     mod_deco.decorateWords(activeEditor, [
-    //         {
-    //             regex: "@?\\b(private|nonrentant|constant)\\b",
-    //             captureGroup: 0,
-    //         },
-    //     ], mod_deco.styles.foreGroundOk);
-    //     mod_deco.decorateWords(activeEditor, [
-    //         {
-    //             regex: "\\b(log)\\.",
-    //             captureGroup: 1,
-    //         },
-    //         {
-    //             regex: "\\b(clear)\\b\\(",
-    //             captureGroup: 1,
-    //         },
-    //     ], mod_deco.styles.foreGroundNewEmit);
-    //     mod_deco.decorateWords(activeEditor, [
-    //         {
-    //             regex: "\\b(__init__|__default__)\\b",
-    //             captureGroup: 0,
-    //         },
-    //     ], mod_deco.styles.boldUnderline);
-    // }
-}
-function onInitModules(context, type) {
-    // mod_hover.init(context, type);
-    // mod_compile.init(context, type);
 }
 function openFile(filePath) {
     const openPath = vscode.Uri.file(filePath);
@@ -137,31 +80,37 @@ function getFilesFromDir(
 }
 
 function getFeOutputFolder() {
-    return vscode.workspace.workspaceFolders[0].uri.path+'/'+settings.extensionConfig().outputFolder;
+    return vscode.workspace.workspaceFolders[0].uri.path + '/' + settings.extensionConfig().outputFolder;
 }
-function getFeCommand() { 
+function getFeCommand() {
     return settings.extensionConfig().command;
 }
 function compileAllinVS(fileName) {
     const fe_options = "--overwrite --emit=abi,bytecode,ast,tokens,yul,loweredAst";
     const outputFolder = tp.getFeTempOutputFolder();
     const rmCommand = "rm -rf " + outputFolder;
+    if (fileName.endsWith('.git'))
+        fileName = fileName.slice(0, -4);
+        if (!fileName.endsWith('.fe')) return;
     const feCommand = getFeCommand()
         + " "
         + fileName + " " + fe_options + " "
         + "--output-dir " + outputFolder;
     const rmOutput = execSync(rmCommand).toString();
-    try
-    {
-    execSync(feCommand);
+    try {
+        execSync(feCommand);
     }
-    catch (e)
-    {}
+    catch (e) {
+        vscode.window.showErrorMessage('[Compiler Exception] ' + e);
+    }
 }
 
 function freshCompile(fileName) {
     compileAllinVS(fileName);
     const fe_options = settings.extensionConfig().options;
+    if (fileName.endsWith('.git'))
+        fileName = fileName.slice(0, -4);
+        if (!fileName.endsWith('.fe')) return;
     const outputFolder = getFeOutputFolder();
     const rmCommand = "rm -rf " + outputFolder;
     const feCommand = getFeCommand()
@@ -169,20 +118,29 @@ function freshCompile(fileName) {
         + fileName + " " + fe_options + " "
         + "--output-dir " + outputFolder;
     execSync(rmCommand);
-    execSync(feCommand);
+    try {
+        execSync(feCommand);
+    }
+    catch (e) {
+        vscode.window.showErrorMessage('[Compiler Exception] ' + e);
+    }
     outputFiles = [fileName].concat(getFilesFromDir(outputFolder));
-    
+
 }
-
+function onInitModules(context, lang) {
+}
 function onActivate(context) {
-
     const active = vscode.window.activeTextEditor;
     activeEditor = active;
     let disposable = vscode.commands.registerCommand('fe.openAST', () => {
         var workPath = vscode.workspace.workspaceFolders[0].uri.path;
         var currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
         var currentlyOpenTabfileName = path.basename(currentlyOpenTabfilePath);
-        var filePath = '';
+        if (currentlyOpenTabfileName.endsWith('.git'))
+        {
+            vscode.window.showErrorMessage('git git');
+        currentlyOpenTabfileName = currentlyOpenTabfileName.slice(0, -4);
+        }
 
         if (outputFiles.length != 0) {
             let ind = outputFiles.indexOf(currentlyOpenTabfilePath);
@@ -201,83 +159,77 @@ function onActivate(context) {
     context.subscriptions.push(disposable);
 
     registerDocType(settings.LANGUAGE_ID);
-    
+
 
     function registerDocType(type) {
         context.subscriptions.push(
             vscode.languages.reg
-        );}
+        );
+    }
 
 
 
 
-        // taken from: https://github.com/Microsoft/vscode/blob/master/extensions/python/src/pythonMain.ts ; slightly modified
-        // autoindent while typing
-        vscode.languages.setLanguageConfiguration(settings.LANGUAGE_ID, {
-            onEnterRules: [
-                {
-                    beforeText: /^\s*(?:pub|struct|def|class|for|if|elif|else|while|try|with|finally|except|async).*?:\s*$/,
-                    action: { indentAction: vscode.IndentAction.Indent }
-                }
-            ]
-        });
-
-        // context.subscriptions.push(
-        //     vscode.commands.registerCommand('fe.compileContract', mod_compile.compileContractCommand)
-        // );
+    // taken from: https://github.com/Microsoft/vscode/blob/master/extensions/python/src/pythonMain.ts ; slightly modified
+    // autoindent while typing
+    vscode.languages.setLanguageConfiguration(settings.LANGUAGE_ID, {
+        onEnterRules: [
+            {
+                beforeText: /^\s*(?:pub|struct|def|class|for|if|elif|else|while|try|with|finally|except|async).*?:\s*$/,
+                action: { indentAction: vscode.IndentAction.Indent }
+            }
+        ]
+    });
 
 
-        if (!settings.extensionConfig().mode.active) {
-            console.log("ⓘ activate extension: entering passive mode. not registering any active code augmentation support.");
-            return;
+
+    /** module init */
+    onInitModules(context, settings.LANGUAGE_ID);
+    onDidChange();
+    onDidSave(active.document);
+
+    /** event setup */
+    /***** OnChange */
+    vscode.window.onDidChangeActiveTextEditor(editor => {
+        activeEditor = editor;
+        if (editor) {
+            onDidChange();
         }
-        /** module init */
-        //onInitModules(context, settings.LANGUAGE_ID);
-        onDidChange();
-        onDidSave(active.document);
+    }, null, context.subscriptions);
+    /***** OnChange */
+    vscode.workspace.onDidChangeTextDocument(event => {
+        if (activeEditor && event.document === activeEditor.document) {
+            onDidChange(event);
+        }
+    }, null, context.subscriptions);
+    /***** OnSave */
 
-        /** event setup */
-        /***** OnChange */
-        vscode.window.onDidChangeActiveTextEditor(editor => {
-            activeEditor = editor;
-            if (editor) {
-                onDidChange();
-            }
-        }, null, context.subscriptions);
-        /***** OnChange */
-        vscode.workspace.onDidChangeTextDocument(event => {
-            if (activeEditor && event.document === activeEditor.document) {
-                onDidChange(event);
-            }
-        }, null, context.subscriptions);
-        /***** OnSave */
-
-        vscode.workspace.onDidSaveTextDocument(document => {
+    vscode.workspace.onDidSaveTextDocument(document => {
 
 
-            onDidSave(document);
-            tp.activate(context);
-        }, null, context.subscriptions);
+        onDidSave(document);
+        tp.activate(context);
+    }, null, context.subscriptions);
 
     tp.activate(context);
 
-        /****** OnOpen */
-        vscode.workspace.onDidOpenTextDocument(document => {
-            onDidSave(document);
-        }, null, context.subscriptions);
+    /****** OnOpen */
+    vscode.workspace.onDidOpenTextDocument(document => {
+        onDidSave(document);
+    }, null, context.subscriptions);
 
-        /***** SignatureHelper */
-        /*
-        context.subscriptions.push(
-            vscode.languages.registerSignatureHelpProvider(
-                { language: type },
-                new mod_signatures.feSignatureHelpProvider(),
-                '(', ','
-            )
-        );
-        */
+    /***** SignatureHelper */
+    /*
+    context.subscriptions.push(
+        vscode.languages.registerSignatureHelpProvider(
+            { language: type },
+            new mod_signatures.feSignatureHelpProvider(),
+            '(', ','
+        )
+    );
+    */
 
-    
+
 }
 
 /* exports */

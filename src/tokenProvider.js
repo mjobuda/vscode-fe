@@ -213,11 +213,6 @@ var DocumentSemanticTokensProvider = /** @class */ (function () {
                 moduleTokens = getTokensFromTokenFile();
                 builder = new vscode.SemanticTokensBuilder();
                 moduleTokens.forEach(function (token) {
-                    var tt = [getTokenDataLine(token, document.getText()),
-                        getTokenDataStartCharacter(token, document.getText()),
-                        getTokenDataLength(token),
-                        _this._encodeTokenType(getTokenDataTokenType(token)),
-                        _this._encodeTokenModifiers(getTokenDataTokenModifiers(token))];
                     builder.push(getTokenDataLine(token, document.getText()), getTokenDataStartCharacter(token, document.getText()), getTokenDataLength(token), _this._encodeTokenType(getTokenDataTokenType(token)), _this._encodeTokenModifiers(getTokenDataTokenModifiers(token)));
                 });
                 return [2 /*return*/, builder.build()];
