@@ -1,4 +1,6 @@
-{
+'use strict';
+
+const builtins = {
     "wei": {
         "prefix": "wei",
         "description": "1 wei == 10e-XX eth",
@@ -373,3 +375,6 @@
         "security":"Note that EXTCODEHASH will be zero during constructor calls. Therefore it is not fit to use it to check if an address is a contract or not as this can be subverted by calling your contract in a constructor."
     }
 }
+module.exports = {
+    builtins: builtins
+};

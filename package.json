@@ -1,9 +1,10 @@
 {
     "name": "vscode-fe",
     "displayName": "Fe",
+    "icon": "images/fe_source.png",
     "description": "Ethereum Fe language support for Visual Studio Code",
     "license": "MIT",
-    "version": "0.0.12",
+    "version": "0.0.16",
     "keywords": [
         "Fe",
         "ethereum",
@@ -93,13 +94,13 @@
             },
             {
                 "language": "ast",
-                "scopeName": "source.fe",
-                "path": "./syntaxes/fe.tmLanguage.json"
+                "scopeName": "source.js",
+                "path": "./syntaxes/rust.tmLanguage.json"
             },
             {
                 "language": "tokens",
-                "scopeName": "source.fe",
-                "path": "./syntaxes/fe.tmLanguage.json"
+                "scopeName": "source.js",
+                "path": "./syntaxes/rust.tmLanguage.json"
             },
             {
                 "language": "yul",

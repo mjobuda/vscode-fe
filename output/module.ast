@@ -1,0 +1,495 @@
+Module {
+    body: [
+        Contract(
+            Node {
+                kind: Contract {
+                    name: Node {
+                        kind: "Foo",
+                        id: NodeId(
+                            79cc42a9-1b36-4b89-a980-04fa422ffc6d,
+                        ),
+                        span: Span {
+                            start: 9,
+                            end: 12,
+                        },
+                    },
+                    fields: [
+                        Node {
+                            kind: Field {
+                                is_pub: false,
+                                is_const: false,
+                                name: Node {
+                                    kind: "baz",
+                                    id: NodeId(
+                                        2e72bfd6-1410-4316-a8f7-327e70fd392c,
+                                    ),
+                                    span: Span {
+                                        start: 18,
+                                        end: 21,
+                                    },
+                                },
+                                typ: Node {
+                                    kind: Generic {
+                                        base: Node {
+                                            kind: "Map",
+                                            id: NodeId(
+                                                1093f3e5-2db2-4b47-8a01-3c207f8bb1b4,
+                                            ),
+                                            span: Span {
+                                                start: 23,
+                                                end: 26,
+                                            },
+                                        },
+                                        args: Node {
+                                            kind: [
+                                                TypeDesc(
+                                                    Node {
+                                                        kind: Base {
+                                                            base: "u256",
+                                                        },
+                                                        id: NodeId(
+                                                            0d5763b7-efd8-4138-a92d-a4d1d97eed38,
+                                                        ),
+                                                        span: Span {
+                                                            start: 27,
+                                                            end: 31,
+                                                        },
+                                                    },
+                                                ),
+                                                TypeDesc(
+                                                    Node {
+                                                        kind: Base {
+                                                            base: "u256",
+                                                        },
+                                                        id: NodeId(
+                                                            222567cc-ff05-445e-9151-c72a8056201a,
+                                                        ),
+                                                        span: Span {
+                                                            start: 33,
+                                                            end: 37,
+                                                        },
+                                                    },
+                                                ),
+                                            ],
+                                            id: NodeId(
+                                                b229d32d-2b80-4d1e-8285-f8426f86e964,
+                                            ),
+                                            span: Span {
+                                                start: 26,
+                                                end: 38,
+                                            },
+                                        },
+                                    },
+                                    id: NodeId(
+                                        d727f49b-9440-4dc3-b784-9a0523a39d00,
+                                    ),
+                                    span: Span {
+                                        start: 23,
+                                        end: 38,
+                                    },
+                                },
+                                value: None,
+                            },
+                            id: NodeId(
+                                4877c862-46a9-4334-ad16-645fda676c9f,
+                            ),
+                            span: Span {
+                                start: 18,
+                                end: 38,
+                            },
+                        },
+                    ],
+                    body: [
+                        Function(
+                            Node {
+                                kind: Function {
+                                    is_pub: false,
+                                    name: Node {
+                                        kind: "assign",
+                                        id: NodeId(
+                                            2c22e379-c5ad-4aed-ad2b-b4856aac2e37,
+                                        ),
+                                        span: Span {
+                                            start: 48,
+                                            end: 54,
+                                        },
+                                    },
+                                    args: [
+                                        Node {
+                                            kind: FunctionArg {
+                                                name: Node {
+                                                    kind: "val",
+                                                    id: NodeId(
+                                                        cdf72d3d-7037-4daa-8631-b700d39f514c,
+                                                    ),
+                                                    span: Span {
+                                                        start: 55,
+                                                        end: 58,
+                                                    },
+                                                },
+                                                typ: Node {
+                                                    kind: Base {
+                                                        base: "u256",
+                                                    },
+                                                    id: NodeId(
+                                                        af85e9a5-a144-417d-a4f1-6a786fe283a0,
+                                                    ),
+                                                    span: Span {
+                                                        start: 60,
+                                                        end: 64,
+                                                    },
+                                                },
+                                            },
+                                            id: NodeId(
+                                                364d5fce-982b-4f9c-8f3e-b2a7d24e4bd0,
+                                            ),
+                                            span: Span {
+                                                start: 55,
+                                                end: 64,
+                                            },
+                                        },
+                                    ],
+                                    return_type: Some(
+                                        Node {
+                                            kind: Base {
+                                                base: "u256",
+                                            },
+                                            id: NodeId(
+                                                b5c846d9-bf03-4505-93b8-9aca0ca9bbc4,
+                                            ),
+                                            span: Span {
+                                                start: 69,
+                                                end: 73,
+                                            },
+                                        },
+                                    ),
+                                    body: [
+                                        Node {
+                                            kind: Assign {
+                                                target: Node {
+                                                    kind: Subscript {
+                                                        value: Node {
+                                                            kind: Attribute {
+                                                                value: Node {
+                                                                    kind: Name(
+                                                                        "self",
+                                                                    ),
+                                                                    id: NodeId(
+                                                                        21d754c8-0304-4a4b-b8ee-16d5d73c8a05,
+                                                                    ),
+                                                                    span: Span {
+                                                                        start: 83,
+                                                                        end: 87,
+                                                                    },
+                                                                },
+                                                                attr: Node {
+                                                                    kind: "baz",
+                                                                    id: NodeId(
+                                                                        5bceaed0-9203-4b08-b82e-59e1a4ed17ad,
+                                                                    ),
+                                                                    span: Span {
+                                                                        start: 88,
+                                                                        end: 91,
+                                                                    },
+                                                                },
+                                                            },
+                                                            id: NodeId(
+                                                                f4830c45-a557-456a-ac4e-d9a2e4134a77,
+                                                            ),
+                                                            span: Span {
+                                                                start: 83,
+                                                                end: 91,
+                                                            },
+                                                        },
+                                                        index: Node {
+                                                            kind: Num(
+                                                                "0",
+                                                            ),
+                                                            id: NodeId(
+                                                                20f111dc-637a-4907-b812-16b165cf04f2,
+                                                            ),
+                                                            span: Span {
+                                                                start: 92,
+                                                                end: 93,
+                                                            },
+                                                        },
+                                                    },
+                                                    id: NodeId(
+                                                        abde2e93-948c-4456-9c0e-922bc23356ec,
+                                                    ),
+                                                    span: Span {
+                                                        start: 83,
+                                                        end: 94,
+                                                    },
+                                                },
+                                                value: Node {
+                                                    kind: Name(
+                                                        "val",
+                                                    ),
+                                                    id: NodeId(
+                                                        3906bc12-246f-430a-b576-59b632129e38,
+                                                    ),
+                                                    span: Span {
+                                                        start: 96,
+                                                        end: 99,
+                                                    },
+                                                },
+                                            },
+                                            id: NodeId(
+                                                ebee37d7-dba5-429a-918a-98d449a010de,
+                                            ),
+                                            span: Span {
+                                                start: 83,
+                                                end: 99,
+                                            },
+                                        },
+                                        Node {
+                                            kind: Return {
+                                                value: Some(
+                                                    Node {
+                                                        kind: Name(
+                                                            "val",
+                                                        ),
+                                                        id: NodeId(
+                                                            6df53359-19ef-4e1b-b764-63a958c21025,
+                                                        ),
+                                                        span: Span {
+                                                            start: 115,
+                                                            end: 118,
+                                                        },
+                                                    },
+                                                ),
+                                            },
+                                            id: NodeId(
+                                                2275ecd3-adee-43e6-865b-a41835c48e8a,
+                                            ),
+                                            span: Span {
+                                                start: 108,
+                                                end: 118,
+                                            },
+                                        },
+                                    ],
+                                },
+                                id: NodeId(
+                                    09850e6d-6c4a-43c2-b331-a3753294131a,
+                                ),
+                                span: Span {
+                                    start: 44,
+                                    end: 118,
+                                },
+                            },
+                        ),
+                        Function(
+                            Node {
+                                kind: Function {
+                                    is_pub: true,
+                                    name: Node {
+                                        kind: "bar",
+                                        id: NodeId(
+                                            14c9847c-ab63-4292-8ea1-acfbff5fe9b1,
+                                        ),
+                                        span: Span {
+                                            start: 132,
+                                            end: 135,
+                                        },
+                                    },
+                                    args: [],
+                                    return_type: Some(
+                                        Node {
+                                            kind: Base {
+                                                base: "u256",
+                                            },
+                                            id: NodeId(
+                                                4b261a5d-a6e7-47e9-bf31-7d8832944b55,
+                                            ),
+                                            span: Span {
+                                                start: 141,
+                                                end: 145,
+                                            },
+                                        },
+                                    ),
+                                    body: [
+                                        Node {
+                                            kind: Expr {
+                                                value: Node {
+                                                    kind: Call {
+                                                        func: Node {
+                                                            kind: Attribute {
+                                                                value: Node {
+                                                                    kind: Name(
+                                                                        "self",
+                                                                    ),
+                                                                    id: NodeId(
+                                                                        7e9313d0-1375-4ba7-8802-4167ed140d9b,
+                                                                    ),
+                                                                    span: Span {
+                                                                        start: 155,
+                                                                        end: 159,
+                                                                    },
+                                                                },
+                                                                attr: Node {
+                                                                    kind: "assign",
+                                                                    id: NodeId(
+                                                                        d354ed69-7ea9-414f-9905-ad429cb66c7f,
+                                                                    ),
+                                                                    span: Span {
+                                                                        start: 160,
+                                                                        end: 166,
+                                                                    },
+                                                                },
+                                                            },
+                                                            id: NodeId(
+                                                                1dac7094-e4fd-41bf-b4cd-d0588ba632af,
+                                                            ),
+                                                            span: Span {
+                                                                start: 155,
+                                                                end: 166,
+                                                            },
+                                                        },
+                                                        generic_args: None,
+                                                        args: Node {
+                                                            kind: [
+                                                                Node {
+                                                                    kind: CallArg {
+                                                                        label: None,
+                                                                        value: Node {
+                                                                            kind: Num(
+                                                                                "100",
+                                                                            ),
+                                                                            id: NodeId(
+                                                                                256892e2-6a83-459f-a502-5d27d2e377ed,
+                                                                            ),
+                                                                            span: Span {
+                                                                                start: 167,
+                                                                                end: 170,
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                    id: NodeId(
+                                                                        384629c0-1989-48ef-85ea-2943b8d760ba,
+                                                                    ),
+                                                                    span: Span {
+                                                                        start: 167,
+                                                                        end: 170,
+                                                                    },
+                                                                },
+                                                            ],
+                                                            id: NodeId(
+                                                                71af4de6-0299-4e93-8e93-5149fb3c134f,
+                                                            ),
+                                                            span: Span {
+                                                                start: 166,
+                                                                end: 171,
+                                                            },
+                                                        },
+                                                    },
+                                                    id: NodeId(
+                                                        cf7eacf5-e890-400c-a17c-222eebe03a5f,
+                                                    ),
+                                                    span: Span {
+                                                        start: 155,
+                                                        end: 171,
+                                                    },
+                                                },
+                                            },
+                                            id: NodeId(
+                                                14c85da2-a8a0-4466-aa50-b236300e7823,
+                                            ),
+                                            span: Span {
+                                                start: 155,
+                                                end: 171,
+                                            },
+                                        },
+                                        Node {
+                                            kind: Return {
+                                                value: Some(
+                                                    Node {
+                                                        kind: Subscript {
+                                                            value: Node {
+                                                                kind: Attribute {
+                                                                    value: Node {
+                                                                        kind: Name(
+                                                                            "self",
+                                                                        ),
+                                                                        id: NodeId(
+                                                                            bf9701f6-9c1e-4352-877f-15a96ec855ea,
+                                                                        ),
+                                                                        span: Span {
+                                                                            start: 187,
+                                                                            end: 191,
+                                                                        },
+                                                                    },
+                                                                    attr: Node {
+                                                                        kind: "baz",
+                                                                        id: NodeId(
+                                                                            002e6cec-a08b-4ffd-910c-3c61189f4774,
+                                                                        ),
+                                                                        span: Span {
+                                                                            start: 192,
+                                                                            end: 195,
+                                                                        },
+                                                                    },
+                                                                },
+                                                                id: NodeId(
+                                                                    b6c09463-31ec-41c1-b80c-79ba5c08d5c4,
+                                                                ),
+                                                                span: Span {
+                                                                    start: 187,
+                                                                    end: 195,
+                                                                },
+                                                            },
+                                                            index: Node {
+                                                                kind: Num(
+                                                                    "0",
+                                                                ),
+                                                                id: NodeId(
+                                                                    ea2e0a2b-d489-47b3-ab68-4f75131090ad,
+                                                                ),
+                                                                span: Span {
+                                                                    start: 196,
+                                                                    end: 197,
+                                                                },
+                                                            },
+                                                        },
+                                                        id: NodeId(
+                                                            c86edf60-a68d-4716-9e8e-650f50a6677f,
+                                                        ),
+                                                        span: Span {
+                                                            start: 187,
+                                                            end: 198,
+                                                        },
+                                                    },
+                                                ),
+                                            },
+                                            id: NodeId(
+                                                3bad6912-127f-4d89-accc-9d8978eacfc1,
+                                            ),
+                                            span: Span {
+                                                start: 180,
+                                                end: 198,
+                                            },
+                                        },
+                                    ],
+                                },
+                                id: NodeId(
+                                    684bc845-f954-4221-813f-18928079c6ba,
+                                ),
+                                span: Span {
+                                    start: 124,
+                                    end: 198,
+                                },
+                            },
+                        ),
+                    ],
+                },
+                id: NodeId(
+                    431be08b-e299-4ae7-9427-5c7694373277,
+                ),
+                span: Span {
+                    start: 0,
+                    end: 198,
+                },
+            },
+        ),
+    ],
+}

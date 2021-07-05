@@ -14,9 +14,9 @@ const fs = require('fs')
 const execSync = require('child_process').execSync;
 const exec = require('child_process').exec;
 
-// const mod_deco = require("./features/deco.js");
-// const mod_signatures = require("./features/signatures.js");
-// const mod_hover = require("./features/hover/hover.js");
+const mod_deco = require("./features/deco.js");
+const mod_signatures = require("./features/signatures.js");
+const mod_hover = require("./features/hover/hover.js");
 // const mod_compile = require("./features/compile.js");
 const settings = require("./settings");
 const tp = require("./tokenProvider.js");
@@ -44,6 +44,53 @@ async function onDidSave(document) {
 async function onDidChange(event) {
     if (vscode.window.activeTextEditor.document.languageId != settings.LANGUAGE_ID) {
         return;
+    }
+    if (settings.extensionConfig().decoration.enable) {
+        mod_deco.decorateWords(activeEditor, [
+            {
+                regex: "@\\b(public|payable|modifying)\\b",
+                captureGroup: 0,
+            },
+            {
+                regex: "\\b(send|raw_call|selfdestruct|raw_log|create_forwarder_to|blockhash)\\b",
+                captureGroup: 0,
+                hoverMessage: "❗**potentially unsafe** lowlevel call"
+            },
+        ], mod_deco.styles.foreGroundWarning);
+        mod_deco.decorateWords(activeEditor, [
+            {
+                regex: "\\b(public|payable|modifying)\\b\\(",
+                captureGroup: 1,
+            },
+        ], mod_deco.styles.foreGroundWarningUnderline);
+        mod_deco.decorateWords(activeEditor, [
+            {
+                regex: "\\b(\\.balance|msg\\.[\\w]+|block\\.[\\w]+)\\b",
+                captureGroup: 0,
+            }
+        ], mod_deco.styles.foreGroundInfoUnderline);
+        mod_deco.decorateWords(activeEditor, [
+            {
+                regex: "@?\\b(private|nonrentant|constant)\\b",
+                captureGroup: 0,
+            },
+        ], mod_deco.styles.foreGroundOk);
+        mod_deco.decorateWords(activeEditor, [
+            {
+                regex: "\\b(log)\\.",
+                captureGroup: 1,
+            },
+            {
+                regex: "\\b(clear)\\b\\(",
+                captureGroup: 1,
+            },
+        ], mod_deco.styles.foreGroundNewEmit);
+        mod_deco.decorateWords(activeEditor, [
+            {
+                regex: "\\b(__init__|__default__)\\b",
+                captureGroup: 0,
+            },
+        ], mod_deco.styles.boldUnderline);
     }
 }
 function openFile(filePath) {
@@ -128,12 +175,13 @@ function freshCompile(fileName) {
 
 }
 function onInitModules(context, lang) {
+    mod_hover.init(context, lang);
+    // mod_compile.init(context, lang);
 }
 function onActivate(context) {
     const active = vscode.window.activeTextEditor;
     activeEditor = active;
     let disposable = vscode.commands.registerCommand('fe.openAST', () => {
-        var workPath = vscode.workspace.workspaceFolders[0].uri.path;
         var currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
         var currentlyOpenTabfileName = path.basename(currentlyOpenTabfilePath);
         if (currentlyOpenTabfileName.endsWith('.git'))
@@ -219,15 +267,15 @@ function onActivate(context) {
     }, null, context.subscriptions);
 
     /***** SignatureHelper */
-    /*
+    
     context.subscriptions.push(
         vscode.languages.registerSignatureHelpProvider(
-            { language: type },
-            new mod_signatures.feSignatureHelpProvider(),
+            { language: settings.LANGUAGE_ID },
+            new mod_signatures.FeSignatureHelpProvider(),
             '(', ','
         )
     );
-    */
+    
 
 
 }
