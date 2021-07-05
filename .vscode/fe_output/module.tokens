@@ -25,50 +25,42 @@
     },
     Token {
         kind: Newline,
-        text: "\n    ",
+        text: "\n",
         span: Span {
             start: 13,
-            end: 18,
+            end: 14,
         },
     },
     Token {
-        kind: Name,
-        text: "tup",
+        kind: Newline,
+        text: "\n    ",
         span: Span {
-            start: 18,
-            end: 21,
+            start: 14,
+            end: 19,
         },
     },
     Token {
-        kind: Colon,
-        text: ":",
+        kind: Pub,
+        text: "pub",
         span: Span {
-            start: 21,
+            start: 19,
             end: 22,
         },
     },
     Token {
-        kind: ParenOpen,
-        text: "(",
+        kind: Def,
+        text: "def",
         span: Span {
             start: 23,
-            end: 24,
+            end: 26,
         },
     },
     Token {
         kind: Name,
-        text: "u256",
+        text: "bar",
         span: Span {
-            start: 24,
-            end: 28,
-        },
-    },
-    Token {
-        kind: Comma,
-        text: ",",
-        span: Span {
-            start: 28,
-            end: 29,
+            start: 27,
+            end: 30,
         },
     },
     Token {
@@ -80,539 +72,235 @@
         },
     },
     Token {
-        kind: Name,
-        text: "u256",
+        kind: ParenClose,
+        text: ")",
         span: Span {
             start: 31,
+            end: 32,
+        },
+    },
+    Token {
+        kind: Arrow,
+        text: "->",
+        span: Span {
+            start: 33,
             end: 35,
         },
     },
     Token {
-        kind: Comma,
-        text: ",",
-        span: Span {
-            start: 35,
-            end: 36,
-        },
-    },
-    Token {
         kind: Name,
         text: "u256",
         span: Span {
-            start: 37,
+            start: 36,
+            end: 40,
+        },
+    },
+    Token {
+        kind: Colon,
+        text: ":",
+        span: Span {
+            start: 40,
             end: 41,
         },
     },
     Token {
-        kind: ParenClose,
-        text: ")",
+        kind: Newline,
+        text: "\n        ",
         span: Span {
             start: 41,
-            end: 42,
+            end: 50,
         },
     },
     Token {
-        kind: ParenClose,
-        text: ")",
+        kind: If,
+        text: "if",
         span: Span {
-            start: 42,
-            end: 43,
+            start: 50,
+            end: 52,
         },
     },
     Token {
-        kind: Newline,
-        text: "\n    ",
+        kind: True,
+        text: "true",
         span: Span {
-            start: 43,
-            end: 48,
-        },
-    },
-    Token {
-        kind: Pub,
-        text: "pub",
-        span: Span {
-            start: 48,
-            end: 51,
-        },
-    },
-    Token {
-        kind: Def,
-        text: "def",
-        span: Span {
-            start: 52,
-            end: 55,
-        },
-    },
-    Token {
-        kind: Name,
-        text: "bar",
-        span: Span {
-            start: 56,
-            end: 59,
-        },
-    },
-    Token {
-        kind: ParenOpen,
-        text: "(",
-        span: Span {
-            start: 59,
-            end: 60,
-        },
-    },
-    Token {
-        kind: ParenClose,
-        text: ")",
-        span: Span {
-            start: 60,
-            end: 61,
-        },
-    },
-    Token {
-        kind: Arrow,
-        text: "->",
-        span: Span {
-            start: 62,
-            end: 64,
-        },
-    },
-    Token {
-        kind: Name,
-        text: "u256",
-        span: Span {
-            start: 65,
-            end: 69,
+            start: 53,
+            end: 57,
         },
     },
     Token {
         kind: Colon,
         text: ":",
         span: Span {
-            start: 69,
-            end: 70,
+            start: 57,
+            end: 58,
         },
     },
     Token {
         kind: Newline,
-        text: "\n        ",
+        text: "\n            ",
         span: Span {
-            start: 70,
-            end: 79,
+            start: 58,
+            end: 71,
         },
     },
     Token {
         kind: Name,
-        text: "self",
+        text: "y",
         span: Span {
-            start: 79,
-            end: 83,
+            start: 71,
+            end: 72,
         },
     },
     Token {
-        kind: Dot,
-        text: ".",
+        kind: Colon,
+        text: ":",
         span: Span {
-            start: 83,
-            end: 84,
+            start: 72,
+            end: 73,
         },
     },
     Token {
         kind: Name,
-        text: "tup",
+        text: "u256",
         span: Span {
-            start: 84,
-            end: 87,
+            start: 74,
+            end: 78,
         },
     },
     Token {
         kind: Eq,
         text: "=",
         span: Span {
-            start: 87,
-            end: 88,
-        },
-    },
-    Token {
-        kind: ParenOpen,
-        text: "(",
-        span: Span {
-            start: 89,
-            end: 90,
+            start: 79,
+            end: 80,
         },
     },
     Token {
         kind: Int,
         text: "1",
         span: Span {
-            start: 90,
-            end: 91,
+            start: 81,
+            end: 82,
         },
     },
     Token {
-        kind: Comma,
-        text: ",",
+        kind: Newline,
+        text: "\n            ",
         span: Span {
-            start: 91,
-            end: 92,
-        },
-    },
-    Token {
-        kind: ParenOpen,
-        text: "(",
-        span: Span {
-            start: 93,
-            end: 94,
-        },
-    },
-    Token {
-        kind: Int,
-        text: "2",
-        span: Span {
-            start: 94,
+            start: 82,
             end: 95,
         },
     },
     Token {
-        kind: Comma,
-        text: ",",
+        kind: Return,
+        text: "return",
         span: Span {
             start: 95,
-            end: 96,
+            end: 101,
         },
     },
     Token {
-        kind: Int,
-        text: "3",
+        kind: Name,
+        text: "y",
         span: Span {
-            start: 97,
-            end: 98,
-        },
-    },
-    Token {
-        kind: ParenClose,
-        text: ")",
-        span: Span {
-            start: 98,
-            end: 99,
-        },
-    },
-    Token {
-        kind: ParenClose,
-        text: ")",
-        span: Span {
-            start: 99,
-            end: 100,
+            start: 102,
+            end: 103,
         },
     },
     Token {
         kind: Newline,
         text: "\n        ",
         span: Span {
-            start: 100,
-            end: 109,
+            start: 103,
+            end: 112,
         },
     },
     Token {
-        kind: Return,
-        text: "return",
+        kind: Else,
+        text: "else",
         span: Span {
-            start: 109,
-            end: 115,
-        },
-    },
-    Token {
-        kind: Name,
-        text: "self",
-        span: Span {
-            start: 116,
-            end: 120,
-        },
-    },
-    Token {
-        kind: Dot,
-        text: ".",
-        span: Span {
-            start: 120,
-            end: 121,
-        },
-    },
-    Token {
-        kind: Name,
-        text: "tup",
-        span: Span {
-            start: 121,
-            end: 124,
-        },
-    },
-    Token {
-        kind: Dot,
-        text: ".",
-        span: Span {
-            start: 124,
-            end: 125,
-        },
-    },
-    Token {
-        kind: Name,
-        text: "item0",
-        span: Span {
-            start: 125,
-            end: 130,
-        },
-    },
-    Token {
-        kind: Newline,
-        text: "\n    ",
-        span: Span {
-            start: 130,
-            end: 135,
-        },
-    },
-    Token {
-        kind: Pub,
-        text: "pub",
-        span: Span {
-            start: 135,
-            end: 138,
-        },
-    },
-    Token {
-        kind: Def,
-        text: "def",
-        span: Span {
-            start: 139,
-            end: 142,
-        },
-    },
-    Token {
-        kind: Name,
-        text: "bar2",
-        span: Span {
-            start: 143,
-            end: 147,
-        },
-    },
-    Token {
-        kind: ParenOpen,
-        text: "(",
-        span: Span {
-            start: 147,
-            end: 148,
-        },
-    },
-    Token {
-        kind: ParenClose,
-        text: ")",
-        span: Span {
-            start: 148,
-            end: 149,
-        },
-    },
-    Token {
-        kind: Arrow,
-        text: "->",
-        span: Span {
-            start: 150,
-            end: 152,
-        },
-    },
-    Token {
-        kind: Name,
-        text: "u256",
-        span: Span {
-            start: 153,
-            end: 157,
+            start: 112,
+            end: 116,
         },
     },
     Token {
         kind: Colon,
         text: ":",
         span: Span {
-            start: 157,
-            end: 158,
+            start: 116,
+            end: 117,
         },
     },
     Token {
         kind: Newline,
-        text: "\n        ",
+        text: "\n            ",
         span: Span {
-            start: 158,
-            end: 167,
+            start: 117,
+            end: 130,
         },
     },
     Token {
         kind: Name,
-        text: "self",
+        text: "y",
         span: Span {
-            start: 167,
-            end: 171,
+            start: 130,
+            end: 131,
         },
     },
     Token {
-        kind: Dot,
-        text: ".",
+        kind: Colon,
+        text: ":",
         span: Span {
-            start: 171,
-            end: 172,
+            start: 131,
+            end: 132,
         },
     },
     Token {
         kind: Name,
-        text: "tup",
+        text: "u256",
         span: Span {
-            start: 172,
-            end: 175,
+            start: 133,
+            end: 137,
         },
     },
     Token {
         kind: Eq,
         text: "=",
         span: Span {
-            start: 175,
-            end: 176,
-        },
-    },
-    Token {
-        kind: ParenOpen,
-        text: "(",
-        span: Span {
-            start: 177,
-            end: 178,
+            start: 138,
+            end: 139,
         },
     },
     Token {
         kind: Int,
         text: "1",
         span: Span {
-            start: 178,
-            end: 179,
-        },
-    },
-    Token {
-        kind: Comma,
-        text: ",",
-        span: Span {
-            start: 179,
-            end: 180,
-        },
-    },
-    Token {
-        kind: ParenOpen,
-        text: "(",
-        span: Span {
-            start: 181,
-            end: 182,
-        },
-    },
-    Token {
-        kind: Int,
-        text: "2",
-        span: Span {
-            start: 182,
-            end: 183,
-        },
-    },
-    Token {
-        kind: Comma,
-        text: ",",
-        span: Span {
-            start: 183,
-            end: 184,
-        },
-    },
-    Token {
-        kind: Int,
-        text: "3",
-        span: Span {
-            start: 185,
-            end: 186,
-        },
-    },
-    Token {
-        kind: ParenClose,
-        text: ")",
-        span: Span {
-            start: 186,
-            end: 187,
-        },
-    },
-    Token {
-        kind: ParenClose,
-        text: ")",
-        span: Span {
-            start: 187,
-            end: 188,
+            start: 140,
+            end: 141,
         },
     },
     Token {
         kind: Newline,
-        text: "\n        ",
+        text: "\n            ",
         span: Span {
-            start: 188,
-            end: 197,
+            start: 141,
+            end: 154,
         },
     },
     Token {
         kind: Return,
         text: "return",
         span: Span {
-            start: 197,
-            end: 203,
+            start: 154,
+            end: 160,
         },
     },
     Token {
         kind: Name,
-        text: "self",
+        text: "y",
         span: Span {
-            start: 204,
-            end: 208,
-        },
-    },
-    Token {
-        kind: Dot,
-        text: ".",
-        span: Span {
-            start: 208,
-            end: 209,
-        },
-    },
-    Token {
-        kind: Name,
-        text: "tup",
-        span: Span {
-            start: 209,
-            end: 212,
-        },
-    },
-    Token {
-        kind: Dot,
-        text: ".",
-        span: Span {
-            start: 212,
-            end: 213,
-        },
-    },
-    Token {
-        kind: Name,
-        text: "item1",
-        span: Span {
-            start: 213,
-            end: 218,
-        },
-    },
-    Token {
-        kind: Dot,
-        text: ".",
-        span: Span {
-            start: 218,
-            end: 219,
-        },
-    },
-    Token {
-        kind: Name,
-        text: "item0",
-        span: Span {
-            start: 219,
-            end: 224,
+            start: 161,
+            end: 162,
         },
     },
 ]

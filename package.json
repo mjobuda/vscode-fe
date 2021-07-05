@@ -29,7 +29,7 @@
     "activationEvents": [
         "onLanguage:fe"
     ],
-    "main": "./dist/extension.js",
+    "main": "./src/extension.js",
     "contributes": {
         "themes": [
             {
@@ -157,27 +157,9 @@
         "configurationDefaults": {
             "[fe]": {
                 "editor.semanticHighlighting.enabled": true
+                
             }
         },
-        "tokenColors": [
-            {
-                "scope": "Def",
-                "settings": {
-                    "foreground": "#dd0000",
-                    "fontStyle": "italic"
-                }
-            }
-        ],
-        "semanticTokenScopes": [
-            {
-                "language": "fe",
-                "scopes": {
-                    "Name": [
-                        "variable.other.constant.property.ts"
-                    ]
-                }
-            }
-        ],
         "commands": [
             {
                 "command": "fe.compileContract",

@@ -39,6 +39,7 @@ exports.__esModule = true;
 exports.getFeTempOutputFolder = exports.activate = void 0;
 var vscode = require("vscode");
 var fs = require("fs");
+var settings = require("./settings");
 var tokenTypes = new Map();
 var tokenModifiers = new Map();
 var legend = (function () {
@@ -148,19 +149,14 @@ function activate(context) {
 }
 exports.activate = activate;
 function getLineNumberFromCharPos(text, pos) {
-    var res = text.slice(0, pos);
-    var lines = (res.match(/\n/g) || '').length + 1;
-    return lines;
-}
-function getLineStartPosFromCharPos(text, pos) {
     if (pos == 0)
         return 0;
-    var buf = text.slice(0, pos).split('\n');
-    var ret = buf.length - 1;
-    return ret;
+    var res = text.slice(0, pos);
+    var lines = (res.match(/\n/g) || '').length;
+    return lines;
 }
 function getFeTempOutputFolder() {
-    return "/home/mmm/github/vscode-fe/.vscode/fe_output";
+    return vscode.workspace.workspaceFolders[0].uri.path + '/' + '.vscode/fe_output';
 }
 exports.getFeTempOutputFolder = getFeTempOutputFolder;
 function getTokenFileName() {
@@ -191,7 +187,7 @@ function getTokenDataStartCharacter(text, documentText) {
     var ret = documentText.slice(0, start).split('\n');
     if (ret.length == 1)
         return ret[0].length;
-    return ret[ret.length - 1].length + 1;
+    return ret[ret.length - 1].length;
 }
 function getTokenDataLength(text) {
     //nasty way to extract the data!!! you should change this
@@ -217,14 +213,12 @@ var DocumentSemanticTokensProvider = /** @class */ (function () {
                 moduleTokens = getTokensFromTokenFile();
                 builder = new vscode.SemanticTokensBuilder();
                 moduleTokens.forEach(function (token) {
-                    // const ddebug = [getTokenDataLine(token,document.getText()),
-                    // 	getTokenDataStartCharacter(token,document.getText()),
-                    // 	getTokenDataLength(token),
-                    // 	getTokenDataTokenType(token),
-                    // 	this._encodeTokenModifiers(getTokenDataTokenModifiers(token))];
-                    builder.push(
-                    // token.line, token.startCharacter, token.length, this._encodeTokenType(token.tokenType), this._encodeTokenModifiers(token.tokenModifiers)
-                    getTokenDataLine(token, document.getText()) - 1, getTokenDataStartCharacter(token, document.getText()) - 1, getTokenDataLength(token), _this._encodeTokenType(getTokenDataTokenType(token)), _this._encodeTokenModifiers(getTokenDataTokenModifiers(token)));
+                    var tt = [getTokenDataLine(token, document.getText()),
+                        getTokenDataStartCharacter(token, document.getText()),
+                        getTokenDataLength(token),
+                        _this._encodeTokenType(getTokenDataTokenType(token)),
+                        _this._encodeTokenModifiers(getTokenDataTokenModifiers(token))];
+                    builder.push(getTokenDataLine(token, document.getText()), getTokenDataStartCharacter(token, document.getText()), getTokenDataLength(token), _this._encodeTokenType(getTokenDataTokenType(token)), _this._encodeTokenModifiers(getTokenDataTokenModifiers(token)));
                 });
                 return [2 /*return*/, builder.build()];
             });
@@ -251,41 +245,6 @@ var DocumentSemanticTokensProvider = /** @class */ (function () {
             }
         }
         return result;
-    };
-    DocumentSemanticTokensProvider.prototype._parseText = function (text) {
-        var r = [];
-        var lines = text.split(/\r\n|\r|\n/);
-        for (var i = 0; i < lines.length; i++) {
-            var line = lines[i];
-            var currentOffset = 0;
-            do {
-                var openOffset = line.indexOf('[', currentOffset);
-                if (openOffset === -1) {
-                    break;
-                }
-                var closeOffset = line.indexOf(']', openOffset);
-                if (closeOffset === -1) {
-                    break;
-                }
-                var tokenData = this._parseTextToken(line.substring(openOffset + 1, closeOffset));
-                r.push({
-                    line: i,
-                    startCharacter: openOffset + 1,
-                    length: closeOffset - openOffset - 1,
-                    tokenType: tokenData.tokenType,
-                    tokenModifiers: tokenData.tokenModifiers
-                });
-                currentOffset = closeOffset;
-            } while (true);
-        }
-        return r;
-    };
-    DocumentSemanticTokensProvider.prototype._parseTextToken = function (text) {
-        var parts = text.split('.');
-        return {
-            tokenType: parts[0],
-            tokenModifiers: parts.slice(1)
-        };
     };
     return DocumentSemanticTokensProvider;
 }());

@@ -33,7 +33,6 @@ var outputFiles = [];
 /** event funcs */
 async function onDidSave(document) {
 
-    // if (document.languageId != settings.LANGUAGE_ID) {
     if (document.languageId != settings.LANGUAGE_ID) {
         console.log("langid mismatch");
         // document.languageId = settings.LANGUAGE_ID;
@@ -152,8 +151,12 @@ function compileAllinVS(fileName) {
         + fileName + " " + fe_options + " "
         + "--output-dir " + outputFolder;
     const rmOutput = execSync(rmCommand).toString();
-    
+    try
+    {
     execSync(feCommand);
+    }
+    catch (e)
+    {}
 }
 
 function freshCompile(fileName) {
@@ -168,7 +171,7 @@ function freshCompile(fileName) {
     execSync(rmCommand);
     execSync(feCommand);
     outputFiles = [fileName].concat(getFilesFromDir(outputFolder));
-
+    
 }
 
 function onActivate(context) {
@@ -203,15 +206,14 @@ function onActivate(context) {
     function registerDocType(type) {
         context.subscriptions.push(
             vscode.languages.reg
-        );
-        console.log('activate');
+        );}
 
 
 
 
         // taken from: https://github.com/Microsoft/vscode/blob/master/extensions/python/src/pythonMain.ts ; slightly modified
         // autoindent while typing
-        vscode.languages.setLanguageConfiguration(type, {
+        vscode.languages.setLanguageConfiguration(settings.LANGUAGE_ID, {
             onEnterRules: [
                 {
                     beforeText: /^\s*(?:pub|struct|def|class|for|if|elif|else|while|try|with|finally|except|async).*?:\s*$/,
@@ -230,7 +232,7 @@ function onActivate(context) {
             return;
         }
         /** module init */
-        onInitModules(context, type);
+        //onInitModules(context, settings.LANGUAGE_ID);
         onDidChange();
         onDidSave(active.document);
 
@@ -254,6 +256,7 @@ function onActivate(context) {
 
 
             onDidSave(document);
+            tp.activate(context);
         }, null, context.subscriptions);
 
     tp.activate(context);
@@ -274,7 +277,7 @@ function onActivate(context) {
         );
         */
 
-    }
+    
 }
 
 /* exports */

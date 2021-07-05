@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import { EndOfLineState, TokenClass } from 'typescript';
+const settings = require("./settings");
 
 const tokenTypes = new Map<string, number>();
 const tokenModifiers = new Map<string, number>();
@@ -12,94 +13,94 @@ const legend = (function () {
 	// 	'method', 'macro', 'variable', 'parameter', 'property', 'label'
 	// ];
 	const tokenTypesLegend = [
-	"Error",
+		"Error",
 
-    "Newline",
+		"Newline",
 
-    /// Virtual tokens emitted by the parser
-    "Indent",
-    "Dedent",
+		/// Virtual tokens emitted by the parser
+		"Indent",
+		"Dedent",
 
-    "Name",
-    "Int",
-    "Hex",
-    "Octal",
-    "Binary",
-    // Float
-    "Text",
-    "True",
-    "False",
-    // None
-    "Assert",
-    "Break",
-    "Continue",
-    "Contract",
-    "Def",
-    "Const",
-    "Elif",
-    "Else",
-    "Emit",
-    "Event",
-    "Idx",
-    "If",
-    "Import",
-    "Pragma",
-    "Pass",
-    "For",
-    "Pub",
-    "Return",
-    "Revert",
-    "Struct",
-    "Type",
-    "While",
-    "And",
-    "As",
-    "In",
-    "Not",
-    "Or",
-    // Symbols
-    "ParenOpen",
-    "ParenClose",
-    "BracketOpen",
-    "BracketClose",
-    "BraceOpen",
-    "BraceClose",
-    "Colon",
-    "ColonColon",
-    "Comma",
-    "Semi",
-    "Plus",
-    "Minus",
-    "Star",
-    "Slash",
-    "Pipe",
-    "Amper",
-    "Lt",
-    "LtLt",
-    "Gt",
-    "GtGt",
-    "Eq",
-    "Dot",
-    "Percent",
-    "EqEq",
-    "NotEq",
-    "LtEq",
-    "GtEq",
-    "Tilde",
-    "Hat",
-    "StarStar",
-    "StarStarEq",
-    "PlusEq",
-    "MinusEq",
-    "StarEq",
-    "SlashEq",
-    "PercentEq",
-    "AmperEq",
-    "PipeEq",
-    "HatEq",
-    "LtLtEq",
-    "GtGtEq",
-    "Arrow"
+		"Name",
+		"Int",
+		"Hex",
+		"Octal",
+		"Binary",
+		// Float
+		"Text",
+		"True",
+		"False",
+		// None
+		"Assert",
+		"Break",
+		"Continue",
+		"Contract",
+		"Def",
+		"Const",
+		"Elif",
+		"Else",
+		"Emit",
+		"Event",
+		"Idx",
+		"If",
+		"Import",
+		"Pragma",
+		"Pass",
+		"For",
+		"Pub",
+		"Return",
+		"Revert",
+		"Struct",
+		"Type",
+		"While",
+		"And",
+		"As",
+		"In",
+		"Not",
+		"Or",
+		// Symbols
+		"ParenOpen",
+		"ParenClose",
+		"BracketOpen",
+		"BracketClose",
+		"BraceOpen",
+		"BraceClose",
+		"Colon",
+		"ColonColon",
+		"Comma",
+		"Semi",
+		"Plus",
+		"Minus",
+		"Star",
+		"Slash",
+		"Pipe",
+		"Amper",
+		"Lt",
+		"LtLt",
+		"Gt",
+		"GtGt",
+		"Eq",
+		"Dot",
+		"Percent",
+		"EqEq",
+		"NotEq",
+		"LtEq",
+		"GtEq",
+		"Tilde",
+		"Hat",
+		"StarStar",
+		"StarStarEq",
+		"PlusEq",
+		"MinusEq",
+		"StarEq",
+		"SlashEq",
+		"PercentEq",
+		"AmperEq",
+		"PipeEq",
+		"HatEq",
+		"LtLtEq",
+		"GtGtEq",
+		"Arrow"
 	];
 	tokenTypesLegend.forEach((tokenType, index) => tokenTypes.set(tokenType, index));
 
@@ -125,22 +126,15 @@ interface IParsedToken {
 	tokenModifiers: string[];
 }
 
-function getLineNumberFromCharPos(text,pos)
-{
-	const res = text.slice(0,pos);
-	const lines = (res.match(/\n/g) || '').length + 1
+function getLineNumberFromCharPos(text, pos) {
+	if (pos==0) return 0
+	const res = text.slice(0, pos);
+	const lines = (res.match(/\n/g) || '').length 
 	return lines;
-}
-function getLineStartPosFromCharPos(text,pos)
-{
-	if(pos==0) return 0;
-	const buf = text.slice(0,pos).split('\n');
-	const ret = buf.length-1;
-	return ret;
 }
 
 export function getFeTempOutputFolder() {
-	return "/home/mmm/github/vscode-fe/.vscode/fe_output";
+	return vscode.workspace.workspaceFolders[0].uri.path + '/' + '.vscode/fe_output';
 }
 function getTokenFileName() {
 	return getFeTempOutputFolder() + "/module.tokens";
@@ -157,28 +151,28 @@ function getTokensFromTokenFile() {
 	const ret = lines.split('Token').slice(1, -1);
 	return ret;
 }
-function getTokenDataLine(text,documentText) {
-	const start = Number(text.split('\n').slice(1, -2)[3].replace(/\s+/g, '').split(":")[1].replace(",",""));
-	
-	const ret = getLineNumberFromCharPos(documentText,start);
+function getTokenDataLine(text, documentText) {
+	const start = Number(text.split('\n').slice(1, -2)[3].replace(/\s+/g, '').split(":")[1].replace(",", ""));
+
+	const ret = getLineNumberFromCharPos(documentText, start);
 	return ret;
 }
-function getTokenDataStartCharacter(text,documentText) {
+function getTokenDataStartCharacter(text, documentText) {
 	//nasty way to extract the data!!! you should change this
-	const start = Number(text.split('\n').slice(1, -2)[3].replace(/\s+/g, '').split(":")[1].replace(",",""));
-if (start==0) return 0;
+	const start = Number(text.split('\n').slice(1, -2)[3].replace(/\s+/g, '').split(":")[1].replace(",", ""));
+	if (start == 0) return 0;
 	const ret = documentText.slice(0, start).split('\n');
-	if (ret.length==1) return ret[0].length;
-	return ret[ret.length - 1].length+1;
+	if (ret.length == 1) return ret[0].length;
+	return ret[ret.length - 1].length;
 }
 function getTokenDataLength(text) {
 	//nasty way to extract the data!!! you should change this
-	const start = Number(text.split('\n').slice(1, -2)[3].replace(/\s+/g, '').split(":")[1].replace(",",""));
-	const end = Number(text.split('\n').slice(1, -2)[4].replace(/\s+/g, '').split(":")[1].replace(",",""));	
-	return end-start;
+	const start = Number(text.split('\n').slice(1, -2)[3].replace(/\s+/g, '').split(":")[1].replace(",", ""));
+	const end = Number(text.split('\n').slice(1, -2)[4].replace(/\s+/g, '').split(":")[1].replace(",", ""));
+	return end - start;
 }
 function getTokenDataTokenType(text) {
-	const ret = text.split('\n').slice(1, -2)[0].replace(/\s+/g, '').split(":")[1].replace(",","");
+	const ret = text.split('\n').slice(1, -2)[0].replace(/\s+/g, '').split(":")[1].replace(",", "");
 	return ret;
 }
 function getTokenDataTokenModifiers(text) {
@@ -190,15 +184,14 @@ class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensPro
 		// const allTokens = this._parseText(document.getText());
 		const builder = new vscode.SemanticTokensBuilder();
 		moduleTokens.forEach((token) => {
-			// const ddebug = [getTokenDataLine(token,document.getText()),
-			// 	getTokenDataStartCharacter(token,document.getText()),
-			// 	getTokenDataLength(token),
-			// 	getTokenDataTokenType(token),
-			// 	this._encodeTokenModifiers(getTokenDataTokenModifiers(token))];
+			var tt = [getTokenDataLine(token, document.getText()),
+				getTokenDataStartCharacter(token, document.getText()),
+				getTokenDataLength(token),
+				this._encodeTokenType(getTokenDataTokenType(token)),
+				this._encodeTokenModifiers(getTokenDataTokenModifiers(token))]
 			builder.push(
-				// token.line, token.startCharacter, token.length, this._encodeTokenType(token.tokenType), this._encodeTokenModifiers(token.tokenModifiers)
-				getTokenDataLine(token,document.getText())-1,
-				getTokenDataStartCharacter(token,document.getText())-1,
+				getTokenDataLine(token, document.getText()),
+				getTokenDataStartCharacter(token, document.getText()),
 				getTokenDataLength(token),
 				this._encodeTokenType(getTokenDataTokenType(token)),
 				this._encodeTokenModifiers(getTokenDataTokenModifiers(token))
@@ -230,40 +223,5 @@ class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensPro
 		return result;
 	}
 
-	private _parseText(text: string): IParsedToken[] {
-		const r: IParsedToken[] = [];
-		const lines = text.split(/\r\n|\r|\n/);
-		for (let i = 0; i < lines.length; i++) {
-			const line = lines[i];
-			let currentOffset = 0;
-			do {
-				const openOffset = line.indexOf('[', currentOffset);
-				if (openOffset === -1) {
-					break;
-				}
-				const closeOffset = line.indexOf(']', openOffset);
-				if (closeOffset === -1) {
-					break;
-				}
-				const tokenData = this._parseTextToken(line.substring(openOffset + 1, closeOffset));
-				r.push({
-					line: i,
-					startCharacter: openOffset + 1,
-					length: closeOffset - openOffset - 1,
-					tokenType: tokenData.tokenType,
-					tokenModifiers: tokenData.tokenModifiers
-				});
-				currentOffset = closeOffset;
-			} while (true);
-		}
-		return r;
-	}
-
-	private _parseTextToken(text: string): { tokenType: string; tokenModifiers: string[]; } {
-		const parts = text.split('.');
-		return {
-			tokenType: parts[0],
-			tokenModifiers: parts.slice(1)
-		};
-	}
+	
 }
