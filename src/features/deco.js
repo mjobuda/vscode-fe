@@ -86,7 +86,57 @@ async function decorateWords(editor, decorules, decoStyle) {
     });
 }
 
+function decorateEditor(activeEditor) {
+    mod_deco = this;
+    mod_deco.decorateWords(activeEditor, [
+            {
+                regex: "@\\b(pub|payable|mut)\\b",
+                captureGroup: 0,
+            },
+            {
+                regex: "\\b(send|raw_call|selfdestruct|raw_log|create_forwarder_to|blockhash)\\b",
+                captureGroup: 0,
+                hoverMessage: "❗**potentially unsafe** lowlevel call"
+            },
+        ], mod_deco.styles.foreGroundWarning);
+        mod_deco.decorateWords(activeEditor, [
+            {
+                regex: "\\b(pub|payable|mut)\\b\\(",
+                captureGroup: 1,
+            },
+        ], mod_deco.styles.foreGroundWarningUnderline);
+        mod_deco.decorateWords(activeEditor, [
+            {
+                regex: "\\b(\\.balance|msg\\.[\\w]+|block\\.[\\w]+)\\b",
+                captureGroup: 0,
+            }
+        ], mod_deco.styles.foreGroundInfoUnderline);
+        mod_deco.decorateWords(activeEditor, [
+            {
+                regex: "@?\\b(pure|const|nonpayable|final)\\b",
+                captureGroup: 0,
+            },
+        ], mod_deco.styles.foreGroundOk);
+        mod_deco.decorateWords(activeEditor, [
+            {
+                regex: "\\b(log)\\.",
+                captureGroup: 1,
+            },
+            {
+                regex: "\\b(clear)\\b\\(",
+                captureGroup: 1,
+            },
+        ], mod_deco.styles.foreGroundNewEmit);
+        mod_deco.decorateWords(activeEditor, [
+            {
+                regex: "\\b(event|to_mem|__init__)\\b",
+                captureGroup: 0,
+            },
+        ], mod_deco.styles.boldUnderline);
+}
+
 module.exports = {
-    decorateWords: decorateWords,
+    // decorateWords: decorateWords,
+    decorateEditor: decorateEditor,
     styles: styles
 };

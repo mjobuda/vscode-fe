@@ -30,7 +30,7 @@
     "activationEvents": [
         "onLanguage:fe"
     ],
-    "main": "./dist/extension.js",
+    "main": "./src/extension.js",
     "contributes": {
         "themes": [
             {

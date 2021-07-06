@@ -17,8 +17,8 @@ based on
 
 #### Passive Features
 
-* Fe syntax highlighting support through the compilers tokenizer
-* on hoover tips
+* Fe syntax and semantic coloring through Fe compiler's tokenizer
+* on hoover tips with information about ethereum's and Fe's builtin types and also hints about security concerns
 
 #### Active Killer Features
 

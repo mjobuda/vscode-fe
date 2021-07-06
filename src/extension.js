@@ -46,51 +46,7 @@ async function onDidChange(event) {
         return;
     }
     if (settings.extensionConfig().decoration.enable) {
-        mod_deco.decorateWords(activeEditor, [
-            {
-                regex: "@\\b(public|payable|modifying)\\b",
-                captureGroup: 0,
-            },
-            {
-                regex: "\\b(send|raw_call|selfdestruct|raw_log|create_forwarder_to|blockhash)\\b",
-                captureGroup: 0,
-                hoverMessage: "❗**potentially unsafe** lowlevel call"
-            },
-        ], mod_deco.styles.foreGroundWarning);
-        mod_deco.decorateWords(activeEditor, [
-            {
-                regex: "\\b(public|payable|modifying)\\b\\(",
-                captureGroup: 1,
-            },
-        ], mod_deco.styles.foreGroundWarningUnderline);
-        mod_deco.decorateWords(activeEditor, [
-            {
-                regex: "\\b(\\.balance|msg\\.[\\w]+|block\\.[\\w]+)\\b",
-                captureGroup: 0,
-            }
-        ], mod_deco.styles.foreGroundInfoUnderline);
-        mod_deco.decorateWords(activeEditor, [
-            {
-                regex: "@?\\b(private|nonrentant|constant)\\b",
-                captureGroup: 0,
-            },
-        ], mod_deco.styles.foreGroundOk);
-        mod_deco.decorateWords(activeEditor, [
-            {
-                regex: "\\b(log)\\.",
-                captureGroup: 1,
-            },
-            {
-                regex: "\\b(clear)\\b\\(",
-                captureGroup: 1,
-            },
-        ], mod_deco.styles.foreGroundNewEmit);
-        mod_deco.decorateWords(activeEditor, [
-            {
-                regex: "\\b(__init__|__default__)\\b",
-                captureGroup: 0,
-            },
-        ], mod_deco.styles.boldUnderline);
+        mod_deco.decorateEditor(vscode.window.activeTextEditor) ;
     }
 }
 function openFile(filePath) {
@@ -176,6 +132,7 @@ function freshCompile(fileName) {
 }
 function onInitModules(context, lang) {
     mod_hover.init(context, lang);
+    mod_signatures.init(context,lang);
     // mod_compile.init(context, lang);
 }
 function onActivate(context) {
@@ -268,13 +225,13 @@ function onActivate(context) {
 
     /***** SignatureHelper */
     
-    context.subscriptions.push(
-        vscode.languages.registerSignatureHelpProvider(
-            { language: settings.LANGUAGE_ID },
-            new mod_signatures.FeSignatureHelpProvider(),
-            '(', ','
-        )
-    );
+    // context.subscriptions.push(
+    //     vscode.languages.registerSignatureHelpProvider(
+    //         { language: settings.LANGUAGE_ID },
+    //         new mod_signatures.FeSignatureHelpProvider(),
+    //         '(', ','
+    //     )
+    // );
     
 
 
