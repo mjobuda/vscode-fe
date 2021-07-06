@@ -337,8 +337,8 @@ const builtins = {
         "prefix":".length",
         "description":"<byte[]|array>.length yields the fixed length of the byte array (read-only)."
     },
-    "public":{
-        "prefix":"public",
+    "pub":{
+        "prefix":"pub",
         "description":"Public functions are part of the contract interface and can be either called internally or via messages. For public state variables, an automatic getter function (see below) is generated.",
         "security":"make sure to authenticate calls to this method as anyone can access it"
     },

@@ -17,7 +17,8 @@ based on
 
 #### Passive Features
 
-* Fe syntax highlighting support
+* Fe syntax highlighting support through the compilers tokenizer
+* on hoover tips
 
 #### Active Killer Features
 
