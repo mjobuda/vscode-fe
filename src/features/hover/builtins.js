@@ -377,12 +377,12 @@ const builtins = {
     "contract": {
         "prefix": "contract",
         "description": ["Contracts in Ethereum are similar to classes in object-oriented languages.",
-        "They contain persistent data in state variables,",
-        "and functions that can modify these variables.",
-        "Calling a function on a different contract (instance) will perform an EVM function call",
-        "and thus switch the context such that state variables in the calling contract",
-        "are inaccessible. A contract and its functions need to be called for anything to happen.",
-        "There is no “cron” concept in Ethereum to call a function at a particular event automatically."],
+            "They contain persistent data in state variables,",
+            "and functions that can modify these variables.",
+            "Calling a function on a different contract (instance) will perform an EVM function call",
+            "and thus switch the context such that state variables in the calling contract",
+            "are inaccessible. A contract and its functions need to be called for anything to happen.",
+            "There is no “cron” concept in Ethereum to call a function at a particular event automatically."],
         "security": ""
 
     },
@@ -410,11 +410,41 @@ const builtins = {
     "i128": { "prefix": "i128", "description": "signed integer type with values from 	-(2^127) to	2^127-1", "security": "" },
     "i256": { "prefix": "i256", "description": "signed integer type with values from 	-(2^255) to	2^255-1", "security": "" },
     "Map": {
-        "prefix": "Map", "description": ["Maps a key to a value",
-                                         "Example:",
-                                         "Map<TKey,TValue>",
-"Where TKey is a base type and TValue is any data type."], "security": ""
-    }
+        "prefix": "Map", "description": ["HashMap type","Maps a key to a value",
+            "Example:",
+            "Map<TKey,TValue>",
+            "Where TKey is a base type and TValue is any data type."], "security": ""
+    },
+    "struct": { "prefix": "struct",
+    "description": "XXX",
+    "security": "" },
+    "event": { "prefix": "event", 
+    "description": "An event type is the type denoted by the name of an event item.",
+    "security": "" },
+    "to_mem": {
+        "prefix": "to_mem",
+        "description": ["Reference type values can be copied from storage and into memory using the to_mem function.",
+            "Example:",
+            "my_array_var: u256[10] = self.my_array_field.to_mem()"],
+        "security": ""
+    },
+    "clone": {
+        "prefix": "clone", "description":
+            ["Reference type values in memory can be cloned using the clone function.",
+                "Example:",
+                "# with clone",
+                "foo: u256[10] = bar.clone() # `foo` points to a new segment of memory",
+                "assert foo[1] == bar[1]",
+                "foo[1] = 42",
+                "assert foo[1] != bar[1] # modifying `foo` does not modify bar",
+                "",
+                "# without clone",
+                "foo: u256[10] = bar # `foo` and `bar` point to the same segment of memory",
+                "assert foo[1] == bar[1]",
+                "foo[1] = 42",
+                "assert foo[1] == bar[1] # modifying `foo` also modifies `bar`"],
+        "security": ""
+    },
 }
 
 module.exports = {

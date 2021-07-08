@@ -1,5 +1,12 @@
 /** 
  * @author github.com/tintinweb
+ * @author Marek Owsikowski adapted for Fe
+ * @license MIT
+ * 
+ * */
+
+/** 
+ * @author github.com/tintinweb
  * @license MIT
  * 
  * 
