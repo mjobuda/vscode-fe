@@ -1,28 +1,46 @@
 //! The `fe` command-line interface.
 
-use std::fs;
-use std::io::{Error, Write};
-use std::path::Path;
+//use std::fs;
+use std::io::Error; //, Write};
+                    //use std::path::Path;
 
-use clap::{arg_enum, values_t, App, Arg};
+//use clap::{arg_enum, values_t, App, Arg};
 
-use fe_common::diagnostics::print_diagnostics;
+//use fe_common::diagnostics::print_diagnostics;
 use fe_common::files::FileStore;
+use fe_common::files::SourceFileId;
 use fe_common::panic::install_panic_hook;
-use fe_driver::CompiledModule;
+//use fe_driver::CompiledModule;
 
-use fe_driver::CompileError;
-use fe_parser::ast::Module;
+//use fe_driver::CompileError;
+// use fe_parser::ast::Module;
 use fe_parser::parse_file;
+use fe_analyzer::analyze;
+use fe_lowering::lower;
+
+
 
 #[macro_use]
 extern crate neon;
 #[macro_use]
 extern crate neon_serde;
 
+use serde_json::json;
+use serde::{Serialize, Deserialize};
+
+
+
 const DEFAULT_OUTPUT_DIR_NAME: &str = "output";
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
+
+// #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+// pub struct Token<'a> {
+//     pub kind: TokenKind,
+//     pub text: &'a str,
+//     pub span: Span,
+// }
+/*
 arg_enum! {
     #[derive(PartialEq, Debug)]
     pub enum CompilationTarget {
@@ -35,12 +53,69 @@ arg_enum! {
         Yul,
     }
 }
+*/
+// pub fn main() {///ss=require('.').compileFromFilename("/home/mmm/github/latest_fe/fe/crates/test-files/fixtures/features/base_tuple.fe")
+// don't do this!!!
+//fn module_to_static(s: Module) -> Module {
+//   &Box::leak(Box::new(s))
+//}
 
-// pub fn main() {
 export! {
- fn compileQ(name: String) -> &'static str {
-    install_panic_hook();
 
+
+    fn compileToAST(textBuffer: String) -> serde_json::Value {
+        let ( fe_module,  parser_diagnostics) =
+                    parse_file(&textBuffer, SourceFileId(1)).expect("oh no! function() failed!!");//file id=1??
+     let ret = &fe_module;
+    json!(&fe_module)
+    }
+    fn compileToLoweredAST(textBuffer: String) -> serde_json::Value {
+        let ( fe_module,  parser_diagnostics) =
+                    parse_file(&textBuffer, SourceFileId(1)).expect("oh no! function() failed!!");
+        // analyze source code
+    let analysis =  analyze(&fe_module, SourceFileId(1)).expect("oh no! function() failed!!");
+    //  {
+    //     Ok(_) if !errors.is_empty() => return Err(CompileError(errors)),
+    //     Ok(analysis) => analysis,
+    //     Err(err) => {
+    //         errors.extend(err.0.into_iter());
+    //         return Err(CompileError(errors));
+    //     }
+    // };
+    // lower the AST
+    let lowered_fe_module = lower(&analysis, fe_module.clone());
+    json!(&lowered_fe_module)
+    }
+
+    // fn analyze(textBuffer: String) -> serde_json::Value {
+    //     let ( fe_module,  parser_diagnostics) =
+    //                 parse_file(&textBuffer, SourceFileId(1)).expect("oh no! function() failed!!");
+    //     // analyze source code
+    // let analysis =  analyze(&fe_module, SourceFileId(1)).expect("oh no! function() failed!!");
+    
+    // json!(&analysis)
+    // }
+
+    fn getTokens(textBuffer: String) -> serde_json::Value {
+        let tokens = {
+            let lexer = fe_parser::lexer::Lexer::new(&textBuffer);
+            lexer.collect::<Vec<_>>()
+        };
+    json!(&tokens)
+    }
+
+
+
+fn compileToASTString(textBuffer: String) -> &'static str {
+    let ( fe_module,  parser_diagnostics) =
+                    parse_file(&textBuffer, SourceFileId(1)).expect("oh no! function() failed!!");//file id=1??
+    //fix this dirty solution, try to grasp the borrowing thing
+    let s: &'static str = string_to_static_str(serde_json::to_string(&fe_module).unwrap());
+    return s
+    }
+ fn compileToASTStringFromFilename(fileName: String) -> &'static str {
+    install_panic_hook();
+/* implement these in js
     let matches = App::new("Fe")
         .version(VERSION)
         .about("Compiler for the Fe language")
@@ -91,10 +166,10 @@ export! {
                 .takes_value(true),
         )
         .get_matches();
-
-    let input_file = "input";//matches.value_of("input").unwrap();
-    let output_dir = "output";matches.value_of("output-dir").unwrap();
-    let overwrite = true;//matches.is_present("overwrite");
+*/
+    let input_file = &fileName;//matches.value_of("input").unwrap();
+    //let output_dir = "output";//matches.value_of("output-dir").unwrap();
+ /*   let overwrite = true;//matches.is_present("overwrite");
     let optimize = true;//matches.value_of("optimize") == Some("true");
     let targets =
         values_t!(matches.values_of("emit"), CompilationTarget).unwrap_or_else(|e| e.exit());
@@ -103,7 +178,7 @@ export! {
     if with_bytecode {
         eprintln!("Warning: bytecode output requires 'solc-backend' feature. Try `cargo build --release --features solc-backend`. Skipping.");
     }
-
+*/
     let mut files = FileStore::new();
     let file = files.load_file(input_file).map_err(ioerr_to_string);
     if let Err(err) = file {
@@ -114,132 +189,19 @@ export! {
     let (fe_module, parser_diagnostics) =
                     parse_file(&content, id).expect("oh no! function() failed!!");
 
-    // let compiled_module = match fe_driver::compile(&content, id, with_bytecode, optimize) {
-    //     Ok(module) => {
-    //         if targets.contains(&CompilationTarget::Json) {
-    //             let (fe_module, parser_diagnostics) =
-    //                 parse_file(&content, id).expect("oh no! function() failed!!");
-    //             let out = &serde_json::to_string(&fe_module).unwrap();
-    //             return &fe_module;
-    //             write_output(&Path::new(output_dir).join("module.json"), out)
-    //                 .expect("oh no! function() failed!!");
-    //         }
-    //         fe_module
-    //     }
-    //     Err(error) => {
-    //         eprintln!("Unable to compile {}.", input_file);
-    //         print_diagnostics(&error.0, &files);
-    //         std::process::exit(1)
-    //     }
-    // };
     let ret = &fe_module;
     let ss = serde_json::to_string(ret);
-    //let s_slice: &str = &*(ss.unwrap());
+    //fix this dirty solution, try to grasp the borrowing thing
     let s: &'static str = string_to_static_str(ss.unwrap());
     return s
 }
     }
 
+// don't do this!!!
 fn string_to_static_str(s: String) -> &'static str {
     Box::leak(s.into_boxed_str())
-}
-/*
-    match write_compiled_module(compiled_module, &content, &targets, &output_dir, overwrite) {
-        Ok(_) => println!("Compiled {}. Outputs in `{}`", input_file, output_dir),
-        Err(err) => {
-            eprintln!(
-                "Failed to write output to directory: `{}`. Error: {}",
-                output_dir, err
-            );
-            std::process::exit(1)
-        }
-    }
-}
-*/
-fn write_compiled_module(
-    mut module: CompiledModule,
-    file_content: &str,
-    targets: &[CompilationTarget],
-    output_dir: &str,
-    overwrite: bool,
-) -> Result<(), String> {
-    let output_dir = Path::new(output_dir);
-    if output_dir.is_file() {
-        return Err(format!(
-            "A file exists at path `{}`, the location of the output directory. Refusing to overwrite.",
-            output_dir.display()
-        ));
-    }
-
-    if !overwrite {
-        verify_nonexistent_or_empty(output_dir)?;
-    }
-
-    fs::create_dir_all(output_dir).map_err(ioerr_to_string)?;
-
-    if targets.contains(&CompilationTarget::Ast) {
-        write_output(&output_dir.join("module.ast"), &module.src_ast)?;
-    }
-
-    if targets.contains(&CompilationTarget::LoweredAst) {
-        write_output(&output_dir.join("lowered_module.ast"), &module.lowered_ast)?;
-    }
-
-    if targets.contains(&CompilationTarget::Tokens) {
-        let tokens = {
-            let lexer = fe_parser::lexer::Lexer::new(file_content);
-            lexer.collect::<Vec<_>>()
-        };
-        write_output(&output_dir.join("module.tokens"), &format!("{:#?}", tokens))?;
-    }
-
-    for (name, contract) in module.contracts.drain() {
-        let contract_output_dir = output_dir.join(&name);
-        fs::create_dir_all(&contract_output_dir).map_err(ioerr_to_string)?;
-
-        if targets.contains(&CompilationTarget::Abi) {
-            let file_name = format!("{}_abi.json", &name);
-            write_output(&contract_output_dir.join(file_name), &contract.json_abi)?;
-        }
-
-        if targets.contains(&CompilationTarget::Yul) {
-            let file_name = format!("{}_ir.yul", &name);
-            write_output(&contract_output_dir.join(file_name), &contract.yul)?;
-        }
-
-        #[cfg(feature = "solc-backend")]
-        if targets.contains(&CompilationTarget::Bytecode) {
-            let file_name = format!("{}.bin", &name);
-            write_output(&contract_output_dir.join(file_name), &contract.bytecode)?;
-        }
-    }
-
-    Ok(())
-}
-
-fn write_output(path: &Path, content: &str) -> Result<(), String> {
-    let mut file = fs::OpenOptions::new()
-        .write(true)
-        .create(true)
-        .truncate(true)
-        .open(path)
-        .map_err(ioerr_to_string)?;
-    file.write_all(content.as_bytes())
-        .map_err(ioerr_to_string)?;
-    Ok(())
 }
 
 fn ioerr_to_string(error: Error) -> String {
     format!("{}", error)
-}
-
-fn verify_nonexistent_or_empty(dir: &Path) -> Result<(), String> {
-    if !dir.exists() || dir.read_dir().map_err(ioerr_to_string)?.next().is_none() {
-        Ok(())
-    } else {
-        Err(format!(
-            "Directory '{}' is not empty. Use --overwrite to overwrite.",
-            dir.display()
-        ))
-    }
 }
