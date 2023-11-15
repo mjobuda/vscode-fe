@@ -143,8 +143,8 @@
                 },
                 "fe.options": {
                     "type": "string",
-                    "default": "--overwrite --emit=abi,bytecode,ast,tokens,yul,loweredAst",
-                    "description": "Defines the options of Fe. Default is: --overwrite --emit=abi,bytecode,ast,tokens,yul,loweredAst"
+                    "default": "--overwrite --emit=abi,bytecode,ast,tokens,yul,lowered-ast",
+                    "description": "Defines the options of Fe. Default is: --overwrite --emit=abi,bytecode,ast,tokens,yul,lowered-ast"
                 }
             }
         },
