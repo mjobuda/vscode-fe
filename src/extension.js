@@ -137,7 +137,7 @@ function getFilesFromDir(
 
 function compileAllinVS(fileName)
 {
-    const fe_options="--overwrite --emit=abi,bytecode,ast,tokens,yul,loweredAst";
+    const fe_options="--overwrite --emit=abi,bytecode,ast,tokens,yul,lowered-ast";
     const outputFolder=".vscode/fe_output";
 const rmCommand = "rm -rf "+outputFolder;
 const feCommand =settings.extensionConfig().command
